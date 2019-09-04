@@ -12,20 +12,15 @@ import pandas as pd
 import datetime
 import time
 from lxml import etree
+import requests
 from bs4 import BeautifulSoup
 import fileinput
+from selenium import webdriver
 
 
 
 
-# chromedriver = "lib/chromedriver2.36"
-# os.environ["webdriver.chrome.driver"] = chromedriver
-# option = webdriver.ChromeOptions()
-# option.add_argument('--ignore-certificate-errors')
-# option.add_argument('headless')
-# chrome = webdriver.Chrome(chromedriver,chrome_options=option)
-#
-# uri = "http://quote.eastmoney.com/"
+
 
 
 # def get_data(stock="sz000001"):
@@ -139,13 +134,22 @@ def get_stock_info():
     :param broser:
     :return:
     """
-    stock = "sh600519"
+    stock = dict()
+    driver = driver_init()
+    stock = "002466"
     stock_info = dict()
-    base_url = "https://finance.sina.com.cn/realstock/company/%s/nc.shtml"%stock
-    page = urllib2.urlopen(base_url).read()
-    # print page
-    xml_page = etree.HTML(page)
-    print xml_page.xpath('//*[@id="hqDetails"]/table/tbody/tr[1]/td[1]')
+    base_url = "http://search.10jqka.com.cn/stockpick/search?tid=stockpick&qs=stockpick_diag&ts=1&w=%s"%stock
+    driver.get(base_url)
+    stock_info["stock_rate_active"] = driver.find_element_by_xpath('//*[@id="dp_tablemore_3"]/div/div/div/div/table/tbody/tr/td[5]/div/a').text
+    stock_info["stock_rate_static"] = driver.find_element_by_xpath('//*[@id="dp_tablemore_3"]/div/div/div/div/table/tbody/tr/td[6]/div').text
+    stock_info["stock_businiess"] = driver.find_element_by_xpath('//*[@id="dp_block_0"]/div/div/table/tbody/tr/td[3]/div/a').text
+    stock_info["stock_concept"] = driver.find_element_by_xpath('//*[@id="dp_block_0"]/div/div/table/tbody/tr/td[6]').text
+    stock_info["stock_anaysis"] = driver.find_element_by_xpath('//*[@id="dp_block_65"]/div/div[2]/div[1]/div').text
+    stock_info["stock_news"] = driver.find_element_by_xpath('//*[@id="dp_block_6"]/div/div[1]').text
+    stock_info["affair"] = driver.find_element_by_xpath('//*[@id="dp_block_1"]/div/div[1]/table').text
+    driver.quit()
+
+
     # broser.get(base_url)
     # stock_info['pe'] = broser.find_element_by_xpath('//*[@id="gt6"]').text
     # stock_info['value'] = broser.find_element_by_xpath('//*[@id="gt7"]').text
@@ -155,6 +159,16 @@ def get_stock_info():
     # stock_info['block2'] = chrome.find_element_by_xpath('//*[@id="zjlxbk"]/tr[2]/td[1]/a').text
     # stock_info['block3'] = chrome.find_element_by_xpath('//*[@id="zjlxbk"]/tr[3]/td[1]/a').text
     return stock_info
+
+
+def driver_init():
+    chromedriver = "lib/chromedriver2.36"
+    os.environ["webdriver.chrome.driver"] = chromedriver
+    option = webdriver.ChromeOptions()
+    option.add_argument('--ignore-certificate-errors')
+    option.add_argument('headless')
+    chrome = webdriver.Chrome(chromedriver, chrome_options=option)
+    return chrome
 
 
 # def get_stock_block_info():
@@ -176,6 +190,7 @@ def get_stock_info():
     #
     # print chrome.find_element_by_xpath('//*[@id="dt_1"]/tbody/tr[1]/td[2]/a').text
 
-print get_a50_index_data()
-print get_china_index_data()
-print get_usa_index_data()
+# print get_a50_index_data()
+# print get_china_index_data()
+# print get_usa_index_data()
+get_stock_info()
