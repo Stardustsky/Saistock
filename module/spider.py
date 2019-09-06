@@ -67,7 +67,7 @@ def get_price_data(stock="", t_length=-100):
     stock_100_volume = df['成交量'][0:50].mean()
     stock_5_volume = df['成交量'][0:5].mean()
     stock_active = stock_5_volume / stock_100_volume
-    return stock_max_price, stock_buttom_price, stock_avarage_price, stock_now_price, stock_price_range,stock_active
+    return stock_max_price, stock_buttom_price, stock_avarage_price, stock_now_price, stock_active, stock_price_range
 
 
 def get_china_index_data():
@@ -127,26 +127,28 @@ def get_a50_index_data():
 
 
 
-def get_stock_info():
+def get_stock_info(stock):
     """
     获取股票基本面信息
     :param stock:
     :param broser:
     :return:
     """
-    stock = dict()
     driver = driver_init()
-    stock = "002466"
     stock_info = dict()
     base_url = "http://search.10jqka.com.cn/stockpick/search?tid=stockpick&qs=stockpick_diag&ts=1&w=%s"%stock
     driver.get(base_url)
-    stock_info["stock_rate_active"] = driver.find_element_by_xpath('//*[@id="dp_tablemore_3"]/div/div/div/div/table/tbody/tr/td[5]/div/a').text
-    stock_info["stock_rate_static"] = driver.find_element_by_xpath('//*[@id="dp_tablemore_3"]/div/div/div/div/table/tbody/tr/td[6]/div').text
+    stock_info["stock_pe_active"] = driver.find_element_by_xpath('//*[@id="dp_tablemore_3"]/div/div/div/div/table/tbody/tr/td[5]/div/a').text
+    stock_info["stock_pe_static"] = driver.find_element_by_xpath('//*[@id="dp_tablemore_3"]/div/div/div/div/table/tbody/tr/td[6]/div').text
     stock_info["stock_businiess"] = driver.find_element_by_xpath('//*[@id="dp_block_0"]/div/div/table/tbody/tr/td[3]/div/a').text
     stock_info["stock_concept"] = driver.find_element_by_xpath('//*[@id="dp_block_0"]/div/div/table/tbody/tr/td[6]').text
     stock_info["stock_anaysis"] = driver.find_element_by_xpath('//*[@id="dp_block_65"]/div/div[2]/div[1]/div').text
-    stock_info["stock_news"] = driver.find_element_by_xpath('//*[@id="dp_block_6"]/div/div[1]').text
-    stock_info["affair"] = driver.find_element_by_xpath('//*[@id="dp_block_1"]/div/div[1]/table').text
+    stock_info["stock_facm"] = driver.find_element_by_xpath('//*[@id="dp_tablemore_3"]/div/div/div/div/table/tbody/tr/td[3]/div').text
+    try:
+        stock_info["stock_news"] = driver.find_element_by_xpath('//*[@id="dp_block_6"]/div/div[1]').text
+        stock_info["affair"] = driver.find_element_by_xpath('//*[@id="dp_block_1"]/div/div[1]/table').text
+    except Exception as e:
+        stock_info["affair"] = ""
     driver.quit()
 
 
@@ -193,4 +195,5 @@ def driver_init():
 # print get_a50_index_data()
 # print get_china_index_data()
 # print get_usa_index_data()
-get_stock_info()
+# print get_stock_info()["stock_value"]
+# print get_stock_info("000526")
