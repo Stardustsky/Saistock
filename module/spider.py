@@ -11,7 +11,7 @@ import json
 import pandas as pd
 import datetime
 import time
-from lxml import etree
+# from lxml import etree
 import requests
 from bs4 import BeautifulSoup
 import fileinput
