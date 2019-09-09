@@ -173,24 +173,6 @@ def driver_init():
     return chrome
 
 
-# def get_stock_block_info():
-#     base_url = "http://data.eastmoney.com/bkzj/gn.html"
-#     hot_block_info = dict()
-#     cold_block_info = dict()
-#     chrome.get(base_url)
-#     chrome.find_element_by_xpath('//*[@id="mk_type"]/li[2]').click()
-#     time.sleep(1)
-#     chrome.find_element_by_xpath('//*[@id="dt_1"]/thead/tr[1]/th[4]/span').click()
-#     time.sleep(1)
-#     for i in range(1,11):
-#         hot_block_info[i] = chrome.find_element_by_xpath('//*[@id="dt_1"]/tbody/tr[%s]/td[2]/a'%i).text
-#     chrome.find_element_by_xpath('//*[@id="dt_1"]/thead/tr[1]/th[4]/span').click()
-#     time.sleep(1)
-#     for i in range(1, 11):
-#         cold_block_info[i] = chrome.find_element_by_xpath('//*[@id="dt_1"]/tbody/tr[%s]/td[2]/a' % i).text
-#     return hot_block_info, cold_block_info
-    #
-    # print chrome.find_element_by_xpath('//*[@id="dt_1"]/tbody/tr[1]/td[2]/a').text
 
 # print get_a50_index_data()
 # print get_china_index_data()
