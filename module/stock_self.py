@@ -65,3 +65,17 @@ def mid_stock_basic(stock_info):
     print stock_basic_score
     return stock_basic_score
 
+
+def short_stock_basic():
+    """
+    短线股票基本面分析
+    :return:
+    """
+
+
+def stock_active():
+    """
+    股票活跃度分析
+    :return:
+    """
+
