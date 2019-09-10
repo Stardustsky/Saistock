@@ -7,3 +7,22 @@
 # @新闻模块
 
 
+def stock_news():
+    """
+    单只股票新闻分析
+    :return:
+    """
+
+
+def plate_news():
+    """
+    板块新闻分析
+    :return:
+    """
+
+
+def market_news():
+    """
+    市场新闻分析
+    :return:
+    """

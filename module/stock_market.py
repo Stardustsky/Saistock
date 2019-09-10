@@ -122,9 +122,6 @@ def market_emotion_index(idx_type="short"):
     usa_idx, usa_info = external_index()
     a50_idx, a50_info = a50_index()
     if idx_type == 'short':
-        print usa_idx, a50_idx
-        usa_idx = 1.0
-        a50_idx = 0.85
         market_score = usa_idx * 0.3 + a50_idx * 0.7
         if market_score >= 1.2:
             market_info = u"市场情绪极好，可积极参与股市"
@@ -146,4 +143,7 @@ def market_emotion_index(idx_type="short"):
         return market_score, [market_info, usa_info, a50_info]
 
 
-print market_emotion_index()
+print market_emotion_index()[0]
+print market_emotion_index()[1][0]
+print market_emotion_index()[1][1]
+print market_emotion_index()[1][2]

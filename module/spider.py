@@ -11,33 +11,10 @@ import json
 import pandas as pd
 import datetime
 import time
-# from lxml import etree
 import requests
 from bs4 import BeautifulSoup
 import fileinput
 from selenium import webdriver
-
-
-
-
-
-
-
-# def get_data(stock="sz000001"):
-#     url = uri+stock+".html"
-#     chrome.get("http://quote.eastmoney.com/sz000001.html")
-#     # print chrome.page_source
-#     # current_price = chrome.find_element_by_xpath('//*[@id="price9"]').text
-#     # print current_price
-#
-#     print chrome.find_element_by_xpath('//*[@id="price9"]').text
-#
-#     # selector.xpath('//*[@id="hxc3_cs_testcanvas"]/div[1]')[0].text
-# #
-#
-# def get_price_range_data():
-#     pass
-#
 
 
 def get_price_data(stock="", t_length=-100):
@@ -49,25 +26,29 @@ def get_price_data(stock="", t_length=-100):
     """
     now_time = datetime.datetime.now().strftime('%Y%m%d')
     old_time = (datetime.datetime.now() + datetime.timedelta(days=t_length)).strftime('%Y%m%d')
-    wy_api = "http://quotes.money.163.com/service/chddata.html?code=%s&start=%s&end=%s&fields=TCLOSE;HIGH;LOW;TOPEN;LCLOSE;CHG;PCHG;VOTURNOVER"%(stock, old_time, now_time)
+    wy_api = "http://quotes.money.163.com/service/chddata.html?code=%s&start=%s&end=%s&fields=TCLOSE;HIGH;LOW;TOPEN;LCLOSE;CHG;PCHG;VOTURNOVER" % (
+    stock, old_time, now_time)
     response = urllib2.urlopen(wy_api)
     data = response.read()
-    data = data.replace('\'', '')
-    data = data.decode('gbk').encode('utf-8')
-    obj = open("data/%s.csv"%stock, "w")
-    obj.write(data)
-    obj.close()
-    df = pd.read_csv("data/%s.csv"%stock)
-    df = df[(True ^ df['成交量'].isin([0]))]
-    stock_avarage_price = df['收盘价'].mean()
-    stock_max_price = df['收盘价'].max()
-    stock_buttom_price = df['收盘价'].min()
-    stock_now_price = df['收盘价'][1]
-    stock_price_range = df['涨跌幅'][0:10]
-    stock_100_volume = df['成交量'][0:50].mean()
-    stock_5_volume = df['成交量'][0:5].mean()
-    stock_active = stock_5_volume / stock_100_volume
-    return stock_max_price, stock_buttom_price, stock_avarage_price, stock_now_price, stock_active, stock_price_range
+    if data:
+        data = data.replace('\'', '')
+        data = data.decode('gbk').encode('utf-8')
+        obj = open("data/%s.csv" % stock, "w")
+        obj.write(data)
+        obj.close()
+        df = pd.read_csv("data/%s.csv" % stock)
+        df = df[(True ^ df['成交量'].isin([0]))]
+        stock_avarage_price = df['收盘价'].mean()
+        stock_max_price = df['收盘价'].max()
+        stock_buttom_price = df['收盘价'].min()
+        stock_now_price = df['收盘价'][1]
+        stock_price_range = df['涨跌幅'][0:10]
+        stock_100_volume = df['成交量'][0:50].mean()
+        stock_3_volume = df['成交量'][0:3].mean()
+        stock_active = stock_3_volume / stock_100_volume
+        return stock_max_price, stock_buttom_price, stock_avarage_price, stock_now_price, stock_active, stock_price_range
+    else:
+        print u"[info]输入股票代码有误，请核对后重新输入"
 
 
 def get_china_index_data():
@@ -112,6 +93,7 @@ def get_usa_index_data():
 
     return nsdk_index, dqs_index
 
+
 def get_a50_index_data():
     """
     获取富时A50行情
@@ -122,9 +104,39 @@ def get_a50_index_data():
     index = urllib2.urlopen(a50).read().split(",")
     a50_index["now"] = index[2]
     a50_index["lastday"] = index[7]
-    a50_index["range"] = (float(index[2]) - float(index[7])) / float(index[7])*100
+    a50_index["range"] = (float(index[2]) - float(index[7])) / float(index[7]) * 100
     return a50_index
 
+
+def get_hot_plate():
+    """
+    获取热门股票以及板块信息
+    :return:
+    """
+    driver = driver_init()
+    try:
+        # 获取热点股票列表
+        hot_stock_list = list()
+        base_url = "http://search.10jqka.com.cn/stockpick/search?typed=1&preParams=&ts=1&f=1&qs=result_rewrite&selfsectsn=&querytype=stock&searchfilter=&tid=stockpick&w=%E7%83%AD%E7%82%B9%E5%89%8D20%E6%8C%89%E6%B6%A8%E5%B9%85%E6%8E%92%E5%88%97&queryarea="
+        driver.get(base_url)
+        hot_stock = driver.find_element_by_xpath('//*[@id="tableWrap"]/div[2]/div/div[2]/div/table').text
+        data = hot_stock.split("\n")
+        for i in range(len(data) / 3):
+            hot_stock_list.append(data[i * 3 + 2])
+
+        # 获取热门概念及原因
+        hot_concept_dict = dict()
+        base_url = "http://search.10jqka.com.cn/stockpick?qs=return_stock"
+        driver.get(base_url)
+        hot_concept = driver.find_element_by_xpath('//*[@id="hltj_right_hc_query_li_st"]/ul').text
+        data = hot_concept.split("\n")
+        for i in range(len(data) / 3):
+            hot_concept_dict[(data[i * 3 + 1])] = data[i * 3 + 2]
+    except Exception as e:
+        print "[info]抓取信息失败."
+
+    driver.quit()
+    return hot_stock_list, hot_concept_dict
 
 
 def get_stock_info(stock):
@@ -136,14 +148,19 @@ def get_stock_info(stock):
     """
     driver = driver_init()
     stock_info = dict()
-    base_url = "http://search.10jqka.com.cn/stockpick/search?tid=stockpick&qs=stockpick_diag&ts=1&w=%s"%stock
+    base_url = "http://search.10jqka.com.cn/stockpick/search?tid=stockpick&qs=stockpick_diag&ts=1&w=%s" % stock
     driver.get(base_url)
-    stock_info["stock_pe_active"] = driver.find_element_by_xpath('//*[@id="dp_tablemore_3"]/div/div/div/div/table/tbody/tr/td[5]/div/a').text
-    stock_info["stock_pe_static"] = driver.find_element_by_xpath('//*[@id="dp_tablemore_3"]/div/div/div/div/table/tbody/tr/td[6]/div').text
-    stock_info["stock_businiess"] = driver.find_element_by_xpath('//*[@id="dp_block_0"]/div/div/table/tbody/tr/td[3]/div/a').text
-    stock_info["stock_concept"] = driver.find_element_by_xpath('//*[@id="dp_block_0"]/div/div/table/tbody/tr/td[6]').text
+    stock_info["stock_pe_active"] = driver.find_element_by_xpath(
+        '//*[@id="dp_tablemore_3"]/div/div/div/div/table/tbody/tr/td[5]/div/a').text
+    stock_info["stock_pe_static"] = driver.find_element_by_xpath(
+        '//*[@id="dp_tablemore_3"]/div/div/div/div/table/tbody/tr/td[6]/div').text
+    stock_info["stock_businiess"] = driver.find_element_by_xpath(
+        '//*[@id="dp_block_0"]/div/div/table/tbody/tr/td[3]/div/a').text
+    stock_info["stock_concept"] = driver.find_element_by_xpath(
+        '//*[@id="dp_block_0"]/div/div/table/tbody/tr/td[6]').text
     stock_info["stock_anaysis"] = driver.find_element_by_xpath('//*[@id="dp_block_65"]/div/div[2]/div[1]/div').text
-    stock_info["stock_facm"] = driver.find_element_by_xpath('//*[@id="dp_tablemore_3"]/div/div/div/div/table/tbody/tr/td[3]/div').text
+    stock_info["stock_facm"] = driver.find_element_by_xpath(
+        '//*[@id="dp_tablemore_3"]/div/div/div/div/table/tbody/tr/td[3]/div').text
     try:
         stock_info["stock_news"] = driver.find_element_by_xpath('//*[@id="dp_block_6"]/div/div[1]').text
         stock_info["affair"] = driver.find_element_by_xpath('//*[@id="dp_block_1"]/div/div[1]/table').text
@@ -151,19 +168,14 @@ def get_stock_info(stock):
         stock_info["affair"] = ""
     driver.quit()
 
-
-    # broser.get(base_url)
-    # stock_info['pe'] = broser.find_element_by_xpath('//*[@id="gt6"]').text
-    # stock_info['value'] = broser.find_element_by_xpath('//*[@id="gt7"]').text
-    # '''流通市值'''
-    # stock_info['famc'] = broser.find_element_by_xpath('//*[@id="gt14"]').text
-    # stock_info['block1'] = chrome.find_element_by_xpath('//*[@id="zjlxbk"]/tr[1]/td[1]/a').text
-    # stock_info['block2'] = chrome.find_element_by_xpath('//*[@id="zjlxbk"]/tr[2]/td[1]/a').text
-    # stock_info['block3'] = chrome.find_element_by_xpath('//*[@id="zjlxbk"]/tr[3]/td[1]/a').text
     return stock_info
 
 
 def driver_init():
+    """
+    webdriver初始化
+    :return:
+    """
     chromedriver = "lib/chromedriver2.36"
     os.environ["webdriver.chrome.driver"] = chromedriver
     option = webdriver.ChromeOptions()
@@ -173,9 +185,9 @@ def driver_init():
     return chrome
 
 
-
 # print get_a50_index_data()
 # print get_china_index_data()
 # print get_usa_index_data()
 # print get_stock_info()["stock_value"]
 # print get_stock_info("000526")
+# print get_hot_plate()

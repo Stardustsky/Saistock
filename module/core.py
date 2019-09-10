@@ -7,7 +7,6 @@
 
 import os
 from multiprocessing import Pool
-from stock_price_range import stock_info
 from initial import read_stock_conf
 
 
