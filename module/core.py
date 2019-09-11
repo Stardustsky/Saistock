@@ -9,7 +9,7 @@ import os
 from multiprocessing import Pool
 from initial import read_stock_conf
 from stock_market import market_emotion_index
-from stock_self import mid_stock_basic,stock_active,short_stock_basic
+from stock_self import mid_stock_basic,get_stock_active,short_stock_basic
 from spider import get_hot_plate
 
 
@@ -30,12 +30,12 @@ def stock_status(stock_code, stock_type="short"):
     :return:
     """
     if stock_type == "short":
-        stock_active_score, stock_active_info = stock_active(stock_code, stock_type)
+        stock_active_score, stock_active_info = get_stock_active(stock_code, stock_type)
         stock_code = stock_code[1:]
         stock_basic_score, stock_basic_info = short_stock_basic(stock_code)
         return stock_active_score, stock_active_info, stock_basic_score, stock_basic_info
     elif stock_type == "long":
-        stock_long_score, stock_active_info = stock_active(stock_code, stock_type)
+        stock_long_score, stock_active_info = get_stock_active(stock_code, stock_type)
         stock_code = stock_code[1:]
         stock_basic_score, stock_basic_info = mid_stock_basic(stock_code)
         return stock_long_score, stock_active_info, stock_basic_score, stock_basic_info
@@ -52,4 +52,4 @@ def plate_status():
     hot_stock_list, hot_concept_dict = get_hot_plate()
     return hot_stock_list, hot_concept_dict
 
-print stock_status("0600155",stock_type="long9ui09")
+# print stock_status("0600624")

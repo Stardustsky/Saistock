@@ -143,7 +143,7 @@ def market_emotion_index(idx_type="short"):
         return market_score, [market_info, usa_info, a50_info]
 
 
-print market_emotion_index()[0]
-print market_emotion_index()[1][0]
-print market_emotion_index()[1][1]
-print market_emotion_index()[1][2]
+# print market_emotion_index()[0]
+# print market_emotion_index()[1][0]
+# print market_emotion_index()[1][1]
+# print market_emotion_index()[1][2]

@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>市场行情面板</title>
+</head>
+<body>
+<div>
+    <center><h2>市场整体情绪分析</h2></center>
+    <p>市场行情得分：{{market[0]}}</p>
+    <p>市场行情分析：{{market[1][0]}}</p>
+    <p>美股行情分析：{{market[1][1]}}</p>
+    <p>A50行情分析：{{market[1][2]}}</p>
+</div>
+<hr>
+<div>
+    <center><h2>市场热点整理分析</h2></center>
+    <p>
+    <h3>市场热点股票：</h3>
+        {%for i in market_hot[0]%}
+        {{i}} |
+        {% end %}
+    </p>
+    <p>
+        <h3>市场热点概念：</h3>
+        {%for i in market_hot[1]%}
+        <li>{{i}}: {{market_hot[1][i]}}</li>
+        {% end %}
+    </p>
+</div>
+<hr>
+<div>
+    <center><h2>个股分析</h2></center>
+    <form action="" method="get">
+        股票代码（1000858）：
+        <input type="text" name="stock">
+        <select name="select_type">
+            <option value ="short">短线</option>
+            <option value ="long">长线</option>
+        </select>
+        <input type="submit" name="sub" value="提交">
+    </form>
+
+</div>
+</body>
+</html>

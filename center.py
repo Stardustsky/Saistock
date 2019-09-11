@@ -7,6 +7,7 @@
 
 import json
 import urllib2
+from module.core import news_status,market_status,plate_status,stock_status
 
 
 stock_list = {
@@ -15,8 +16,9 @@ stock_list = {
 
 
 
-def singel_stock():
-    pass
+def main():
+    market_score, market_info = market_status()
+    hot_stock_list, hot_concept_dict = plate_status()
 
 if __name__ == '__main__':
     stock_num = ""

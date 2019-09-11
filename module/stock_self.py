@@ -5,7 +5,7 @@
 # @File    : stock_self.py
 # @Software: PyCharm
 
-from spider import get_price_data,get_stock_info
+from spider import get_price_data, get_stock_info
 
 
 def mid_stock_basic(stock):
@@ -170,11 +170,13 @@ def short_stock_basic(stock):
 
     return stock_basic_score,stock_basic_info
 
-def stock_active(stock, stock_type="short"):
+
+def get_stock_active(stock, stock_type="short"):
     """
     股票活跃度分析
     :return:
     """
+    stock = "0600624"
     stock_max_price, stock_buttom_price, stock_avarage_price, stock_now_price, stock_active, stock_price_range = get_price_data(
         stock)
     # 股票价格位置概况
@@ -211,6 +213,7 @@ def stock_active(stock, stock_type="short"):
         return stock_long_line, stock_long_line_info
 
 
-print stock_active("1000858")[1]
+# print stock_active("1000858")[1]
 # print stock_active("0600519")[1]
-# print stock_active("0600519")[1]
+# print stock_active("0600626")[1]
+# print stock_active("0600624")

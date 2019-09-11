@@ -7,18 +7,13 @@
 
 import urllib2
 import os
-import json
 import pandas as pd
 import datetime
 import sys
-import time
-import requests
-from bs4 import BeautifulSoup
-import fileinput
 from selenium import webdriver
 
 
-def get_price_data(stock="", t_length=-100):
+def get_price_data(stock, t_length=-100):
     """
     获取股票100日内最高价/最低价/平均价/现价/10日涨跌幅/股票活跃度
     :param stock:
@@ -33,6 +28,7 @@ def get_price_data(stock="", t_length=-100):
     data = response.read()
     try:
         data = data.replace('\'', '')
+        print stock
         data = data.decode('gbk').encode('utf-8')
         obj = open("data/%s.csv" % stock, "w")
         obj.write(data)
@@ -178,11 +174,11 @@ def driver_init():
     :return:
     """
     if sys.platform == 'win32':
-        chromedriver = "driver/chromedriver.exe"
+        chromedriver = "module/driver/chromedriver.exe"
     elif sys.platform == 'win64':
-        chromedriver = "driver/chromedriver.exe"
+        chromedriver = "module/driver/chromedriver.exe"
     elif sys.platform == 'darwin':
-        chromedriver = "driver/chromedriver.mac"
+        chromedriver = "module/driver/chromedriver.mac"
     os.environ["webdriver.chrome.driver"] = chromedriver
     option = webdriver.ChromeOptions()
     option.add_argument('--ignore-certificate-errors')
@@ -195,5 +191,5 @@ def driver_init():
 # print get_china_index_data()
 # print get_usa_index_data()
 # print get_stock_info()["stock_value"]
-# print get_stock_info("000526")
+# print get_stock_info("600155")
 # print get_hot_plate()
