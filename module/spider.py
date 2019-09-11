@@ -10,6 +10,7 @@ import os
 import json
 import pandas as pd
 import datetime
+import sys
 import time
 import requests
 from bs4 import BeautifulSoup
@@ -30,7 +31,7 @@ def get_price_data(stock="", t_length=-100):
     stock, old_time, now_time)
     response = urllib2.urlopen(wy_api)
     data = response.read()
-    if data:
+    try:
         data = data.replace('\'', '')
         data = data.decode('gbk').encode('utf-8')
         obj = open("data/%s.csv" % stock, "w")
@@ -47,7 +48,7 @@ def get_price_data(stock="", t_length=-100):
         stock_3_volume = df['成交量'][0:3].mean()
         stock_active = stock_3_volume / stock_100_volume
         return stock_max_price, stock_buttom_price, stock_avarage_price, stock_now_price, stock_active, stock_price_range
-    else:
+    except:
         print u"[info]输入股票代码有误，请核对后重新输入"
 
 
@@ -176,7 +177,12 @@ def driver_init():
     webdriver初始化
     :return:
     """
-    chromedriver = "lib/chromedriver2.36"
+    if sys.platform == 'win32':
+        chromedriver = "driver/chromedriver.exe"
+    elif sys.platform == 'win64':
+        chromedriver = "driver/chromedriver.exe"
+    elif sys.platform == 'darwin':
+        chromedriver = "driver/chromedriver.mac"
     os.environ["webdriver.chrome.driver"] = chromedriver
     option = webdriver.ChromeOptions()
     option.add_argument('--ignore-certificate-errors')
