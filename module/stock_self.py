@@ -211,8 +211,6 @@ def stock_active(stock, stock_type="short"):
         return stock_long_line, stock_long_line_info
 
 
-<<<<<<< HEAD
 print stock_active("1000858")[1]
-=======
 # print stock_active("0600519")[1]
->>>>>>> 8aae8ca211bf4edc2b615159571e16c132de5a93
+# print stock_active("0600519")[1]
