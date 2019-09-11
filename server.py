@@ -20,23 +20,27 @@ class IndexHandler(tornado.web.RequestHandler):
     def get(self):
         market_score, market_info = market_status()
         hot_stock_list, hot_concept_dict = plate_status()
-        # try:
-        stock = str(self.get_argument("stock"))
-        select_type = str(self.get_argument("select_type"))
-        sub = self.get_argument("sub")
-        print stock
-        print select_type
-        if select_type:
-            stock_long_score, stock_active_info, stock_basic_score, stock_basic_info = stock_status("0600626", stock_type="short")
-            print stock_long_score
-        # except:
-        #     print u"获取数据错误或股票代码有误."
+        try:
+            stock = str(self.get_argument("stock"))
+            select_type = str(self.get_argument("select_type"))
+            sub = self.get_argument("sub")
+            if sub:
+                stock_score, stock_active_info, stock_basic_score, stock_basic_info = stock_status(stock,
+                                                                                                    stock_type=select_type)
+                self.render("index.html",
+                            market=[market_score, market_info],
+                            market_hot=[hot_stock_list, hot_concept_dict],
+                            stock_self=[stock_score, stock_active_info, stock_basic_score, stock_basic_info, stock]
+                            )
+        except:
+            print u'获取个股信息失败.'
+            self.render("index.html",
+                        market=[market_score, market_info],
+                        market_hot=[hot_stock_list, hot_concept_dict],
+                        stock_self=["None", "None", "None", "None"]
+                        )
 
-        self.render("index.html",
-                    market=[market_score, market_info],
-                    market_hot=[hot_stock_list, hot_concept_dict],
-                    stock_self=[stock_long_score, stock_active_info, stock_basic_score, stock_basic_info]
-                    )
+
 
 
 

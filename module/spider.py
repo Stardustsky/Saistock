@@ -24,28 +24,32 @@ def get_price_data(stock, t_length=-100):
     old_time = (datetime.datetime.now() + datetime.timedelta(days=t_length)).strftime('%Y%m%d')
     wy_api = "http://quotes.money.163.com/service/chddata.html?code=%s&start=%s&end=%s&fields=TCLOSE;HIGH;LOW;TOPEN;LCLOSE;CHG;PCHG;VOTURNOVER" % (
     stock, old_time, now_time)
+    # try:
+    #     df = pd.read_csv("module/data/%s.csv" % stock)
+    # except:
     response = urllib2.urlopen(wy_api)
     data = response.read()
-    try:
+    if len(data) > 100:
         data = data.replace('\'', '')
-        print stock
         data = data.decode('gbk').encode('utf-8')
-        obj = open("data/%s.csv" % stock, "w")
+        obj = open("module/data/%s.csv" % stock, "w")
         obj.write(data)
         obj.close()
-        df = pd.read_csv("data/%s.csv" % stock)
-        df = df[(True ^ df['成交量'].isin([0]))]
-        stock_avarage_price = df['收盘价'].mean()
-        stock_max_price = df['收盘价'].max()
-        stock_buttom_price = df['收盘价'].min()
-        stock_now_price = df['收盘价'][1]
-        stock_price_range = df['涨跌幅'][0:10]
-        stock_100_volume = df['成交量'][0:50].mean()
-        stock_3_volume = df['成交量'][0:3].mean()
-        stock_active = stock_3_volume / stock_100_volume
-        return stock_max_price, stock_buttom_price, stock_avarage_price, stock_now_price, stock_active, stock_price_range
-    except:
+        df = pd.read_csv("module/data/%s.csv" % stock)
+    else:
         print u"[info]输入股票代码有误，请核对后重新输入"
+    df = df[(True ^ df['成交量'].isin([0]))]
+    stock_avarage_price = df['收盘价'].mean()
+    stock_max_price = df['收盘价'].max()
+    stock_buttom_price = df['收盘价'].min()
+    stock_now_price = df['收盘价'][1]
+    stock_price_range = df['涨跌幅'][0:10]
+    stock_100_volume = df['成交量'][0:50].mean()
+    stock_3_volume = df['成交量'][0:3].mean()
+    stock_active = stock_3_volume / stock_100_volume
+    return stock_max_price, stock_buttom_price, stock_avarage_price, stock_now_price, stock_active, stock_price_range
+    # except:
+    #     print u"[info]输入股票代码有误，请核对后重新输入"
 
 
 def get_china_index_data():

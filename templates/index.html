@@ -24,7 +24,7 @@
     <p>
         <h3>市场热点概念：</h3>
         {%for i in market_hot[1]%}
-        <li>{{i}}: {{market_hot[1][i]}}</li>
+        <p><li>{{i}}: {{market_hot[1][i]}}</li></p>
         {% end %}
     </p>
 </div>
@@ -32,7 +32,7 @@
 <div>
     <center><h2>个股分析</h2></center>
     <form action="" method="get">
-        股票代码（1000858）：
+        股票代码（eg：1000858）：
         <input type="text" name="stock">
         <select name="select_type">
             <option value ="short">短线</option>
@@ -40,7 +40,24 @@
         </select>
         <input type="submit" name="sub" value="提交">
     </form>
+    <div>
+        <p>
+            <h4>股票代码：</h4>{{stock_self[4]}}
+        </p>
+        <p>
+            <h4>个股活跃度：</h4>{{stock_self[0]}}
+        </p>
+        <p>
+            <h4>个股(活跃度/价格)信息：</h4>{{stock_self[1]}}
+        </p>
+        <p>
+            <h4>个股基本面：</h4>{{stock_self[2]}}
+        </p>
+        <p>
+            <h4>个股基本面信息：</h4>{{stock_self[3]}}
+        </p>
 
+    </div>
 </div>
 </body>
 </html>

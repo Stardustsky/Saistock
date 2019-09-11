@@ -56,33 +56,33 @@ def mid_stock_basic(stock):
     # 市盈率分析
     if active_pe > 150:
         stock_basic_score *= 0.8
-        stock_basic_info += u"市盈率>150,"
+        stock_basic_info += u"市盈率>150，"
     elif 150 >= active_pe > 60:
         stock_basic_score *= 0.85
-        stock_basic_info += u"市盈率>60,"
+        stock_basic_info += u"市盈率>60，"
     elif 60 >= active_pe > 20:
         stock_basic_score *= 0.9
-        stock_basic_info += u"市盈率20~60,"
+        stock_basic_info += u"市盈率20~60，"
     elif 20 >= active_pe > 10:
         stock_basic_score *= 1
-        stock_basic_info += u"市盈率10~20,"
+        stock_basic_info += u"市盈率10~20，"
     elif 10 >= active_pe > 5:
         stock_basic_score *= 1.1
-        stock_basic_info += u"市盈率5~10,"
+        stock_basic_info += u"市盈率5~10，"
     elif active_pe < 5:
         stock_basic_score *= 1.2
-        stock_basic_info += u"市盈率<5,"
+        stock_basic_info += u"市盈率<5，"
 
     if stock_basic_score >= 1.2:
-        stock_basic_info += u"投资价值极大"
+        stock_basic_info += u"中线投资价值极大"
     elif 1.2 > stock_basic_score >= 1.1:
-        stock_basic_info += u"投资价值较大"
+        stock_basic_info += u"中线投资价值较大"
     elif 1.1 > stock_basic_score >= 1.05:
-        stock_basic_info += u"略有投资价值"
+        stock_basic_info += u"略有中线投资价值"
     elif 1.05 > stock_basic_score >= 0.95:
-        stock_basic_info += u"投资价值一般"
+        stock_basic_info += u"中线投资价值一般"
     elif 0.95 > stock_basic_score >= 0.85:
-        stock_basic_info += u"投资价值较差"
+        stock_basic_info += u"中线投资价值较差"
     elif 0.85 > stock_basic_score:
         stock_basic_info += u"不建议中线投资该股票"
 
@@ -135,25 +135,25 @@ def short_stock_basic(stock):
     # 市盈率分析
     if active_pe > 190:
         stock_basic_score *= 0.93
-        stock_basic_info += u"市盈率>190,"
+        stock_basic_info += u"市盈率>190，"
     elif 190 >= active_pe > 150:
         stock_basic_score *= 0.95
-        stock_basic_info += u"市盈率150~190,"
+        stock_basic_info += u"市盈率150~190，"
     elif 150 >= active_pe > 60:
         stock_basic_score *= 1.02
-        stock_basic_info += u"市盈率60~150,"
+        stock_basic_info += u"市盈率60~150，"
     elif 60 >= active_pe > 20:
         stock_basic_score *= 1.05
-        stock_basic_info += u"市盈率20~60,"
+        stock_basic_info += u"市盈率20~60，"
     elif 20 >= active_pe > 10:
         stock_basic_score *= 1.02
-        stock_basic_info += u"市盈率10~20,"
+        stock_basic_info += u"市盈率10~20，"
     elif 10 >= active_pe > 5:
         stock_basic_score *= 0.98
-        stock_basic_info += u"市盈率5~10,"
+        stock_basic_info += u"市盈率5~10，"
     elif active_pe < 5:
         stock_basic_score *= 0.95
-        stock_basic_info += u"市盈率<5,"
+        stock_basic_info += u"市盈率<5，"
 
     if stock_basic_score >= 1.2:
         stock_basic_info += u"短线投资基本面较好"
@@ -176,7 +176,7 @@ def get_stock_active(stock, stock_type="short"):
     股票活跃度分析
     :return:
     """
-    stock = "0600624"
+
     stock_max_price, stock_buttom_price, stock_avarage_price, stock_now_price, stock_active, stock_price_range = get_price_data(
         stock)
     # 股票价格位置概况
@@ -216,4 +216,4 @@ def get_stock_active(stock, stock_type="short"):
 # print stock_active("1000858")[1]
 # print stock_active("0600519")[1]
 # print stock_active("0600626")[1]
-# print stock_active("0600624")
+# print get_stock_active("0600624")
