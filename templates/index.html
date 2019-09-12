@@ -8,18 +8,21 @@
 <body>
 <div>
     <center><h2>市场整体情绪分析</h2></center>
-    <p>
-        <span style="width: 20%"><b>市场行情得分：</b>{{market[0]}}</span>
-    </p>
-    <p>
-        <span style="width: 20%"><b>美股行情分析：</b>{{market[1][1]}}</span>
-    </p>
-    <p>
-        <span style="width: 20%"><b>A50行情分析：</b>{{market[1][2]}}</span>
-    </p>
-    <p>
-        <span style="width: 20%"><b>市场整体行情分析：</b>{{market[1][0]}}</span>
-    </p>
+    <table border="0">
+        <tr>
+            <td class="td_key">市场行情得分：</td><td>{{market[0]}}</td>
+        </tr>
+        <tr>
+            <td class="td_key">美股行情分析：</td><td>{{market[1][1]}}</td>
+        </tr>
+        <tr>
+            <td class="td_key">A50行情分析：</td><td>{{market[1][2]}}</td>
+        </tr>
+        <tr>
+            <td class="td_key">市场行情分析：</td><td>{{market[1][0]}}</td>
+        </tr>
+
+    </table>
 </div>
 <hr>
 <div>
@@ -59,29 +62,25 @@
     </div>
 </div>
 
-    <div>
-        <p>
-            <b>股票代码：</b>{{stock_code}}
-            <b>主营业务：</b>{{stock_self['stock_businiess']}}
-            <b>股票概念：</b>{{stock_self['stock_concept']}}
-        </p>
-        <p>
-        <h4>个股活跃度：</h4>{{stock_self["active_score"]}}
-        </p>
-        <p>
-        <h4>个股(活跃度/价格)信息：</h4>{{stock_self["active_info"]}}
-        </p>
-        <p>
-        <h4>个股基本面：</h4>{{stock_self["basic_score"]}}
-        </p>
-        <p>
-        <h4>个股基本面信息：</h4>{{stock_self["basic_info"]}}
-        </p>
-        <p>
-        <h4>同花顺分析：</h4>{{stock_self["stock_analysis"]}}
-        </p>
+    <table>
+        <tr>
+            <td class="td_key">股票代码：</td><td>{{stock_code}}</td>
+            <td class="td_key">主营业务：</td><td>{{stock_self['stock_businiess']}}</td>
+            <td class="td_key">股票概念：</td><td>{{stock_self['stock_concept']}}</td>
+        </tr>
+        <tr>
+            <td class="td_key">个股活跃度：</td><td>{{stock_self["active_score"]}}</td>
+            <td class="td_key">个股(活跃度/价格)信息：</td><td colspan="3">{{stock_self["active_info"]}}</td>
+        </tr>
+        <tr>
+            <td class="td_key">个股基本面：</td><td>{{stock_self["basic_score"]}}</td>
+            <td class="td_key">个股基本面信息：</td><td colspan="3">{{stock_self["basic_info"]}}</td>
+        </tr>
+        <tr>
+            <td  class="td_key">同花顺分析：</td><td colspan="5">{{stock_self["stock_analysis"]}}</td>
 
-    </div>
+        </tr>
+    </table>
 </div>
 </body>
 </html>
