@@ -151,19 +151,27 @@ def get_stock_info(stock):
     stock_info = dict()
     base_url = "http://search.10jqka.com.cn/stockpick/search?tid=stockpick&qs=stockpick_diag&ts=1&w=%s" % stock
     driver.get(base_url)
+    # 动态市盈率
     stock_info["stock_pe_active"] = driver.find_element_by_xpath(
         '//*[@id="dp_tablemore_3"]/div/div/div/div/table/tbody/tr/td[5]/div/a').text
+    # 静态市盈率
     stock_info["stock_pe_static"] = driver.find_element_by_xpath(
         '//*[@id="dp_tablemore_3"]/div/div/div/div/table/tbody/tr/td[6]/div').text
+    # 公司经营
     stock_info["stock_businiess"] = driver.find_element_by_xpath(
         '//*[@id="dp_block_0"]/div/div/table/tbody/tr/td[3]/div/a').text
+    # 公司概念
     stock_info["stock_concept"] = driver.find_element_by_xpath(
         '//*[@id="dp_block_0"]/div/div/table/tbody/tr/td[6]').text
-    stock_info["stock_anaysis"] = driver.find_element_by_xpath('//*[@id="dp_block_65"]/div/div[2]/div[1]/div').text
+    # 同花顺分析结果
+    stock_info["stock_analysis"] = driver.find_element_by_xpath('//*[@id="dp_block_65"]/div/div[2]/div[1]/div').text
+    # 公司市值
     stock_info["stock_facm"] = driver.find_element_by_xpath(
         '//*[@id="dp_tablemore_3"]/div/div/div/div/table/tbody/tr/td[3]/div').text
     try:
+        # 公司新闻
         stock_info["stock_news"] = driver.find_element_by_xpath('//*[@id="dp_block_6"]/div/div[1]').text
+        # 公司重大事项
         stock_info["affair"] = driver.find_element_by_xpath('//*[@id="dp_block_1"]/div/div[1]/table').text
     except Exception as e:
         stock_info["affair"] = ""

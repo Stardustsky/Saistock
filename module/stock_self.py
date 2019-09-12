@@ -85,8 +85,10 @@ def mid_stock_basic(stock):
         stock_basic_info += u"中线投资价值较差"
     elif 0.85 > stock_basic_score:
         stock_basic_info += u"不建议中线投资该股票"
+    stock_info['basic_score'] = stock_basic_score
+    stock_info['basic_info'] = stock_basic_info
 
-    return stock_basic_score, stock_basic_info
+    return stock_info
 
 
 def short_stock_basic(stock):
@@ -168,7 +170,10 @@ def short_stock_basic(stock):
     elif 0.85 > stock_basic_score:
         stock_basic_info += u"短线投资基本面较差"
 
-    return stock_basic_score,stock_basic_info
+    stock_info['basic_score'] = stock_basic_score
+    stock_info['basic_info'] = stock_basic_info
+
+    return stock_info
 
 
 def get_stock_active(stock, stock_type="short"):

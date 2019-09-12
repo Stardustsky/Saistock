@@ -32,13 +32,18 @@ def stock_status(stock_code, stock_type="short"):
     if stock_type == "short":
         stock_active_score, stock_active_info = get_stock_active(stock_code, stock_type)
         stock_code = stock_code[1:]
-        stock_basic_score, stock_basic_info = short_stock_basic(stock_code)
-        return stock_active_score, stock_active_info, stock_basic_score, stock_basic_info
+        stock_info = short_stock_basic(stock_code)
+        stock_info['active_score'] = stock_active_score
+        stock_info['active_info'] = stock_active_info
+        print stock_info
+        return stock_info
     elif stock_type == "long":
-        stock_long_score, stock_active_info = get_stock_active(stock_code, stock_type)
+        stock_long_score, stock_long_info = get_stock_active(stock_code, stock_type)
         stock_code = stock_code[1:]
-        stock_basic_score, stock_basic_info = mid_stock_basic(stock_code)
-        return stock_long_score, stock_active_info, stock_basic_score, stock_basic_info
+        stock_info = mid_stock_basic(stock_code)
+        stock_info['active_score'] = stock_long_score
+        stock_info['active_info'] = stock_long_info
+        return stock_info
 
 
 def news_status(stock_code):

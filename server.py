@@ -25,19 +25,28 @@ class IndexHandler(tornado.web.RequestHandler):
             select_type = str(self.get_argument("select_type"))
             sub = self.get_argument("sub")
             if sub:
-                stock_score, stock_active_info, stock_basic_score, stock_basic_info = stock_status(stock,
-                                                                                                    stock_type=select_type)
+                stock_info = stock_status(stock, stock_type=select_type)
                 self.render("index.html",
                             market=[market_score, market_info],
                             market_hot=[hot_stock_list, hot_concept_dict],
-                            stock_self=[stock_score, stock_active_info, stock_basic_score, stock_basic_info, stock]
+                            stock_self=stock_info,
+                            stock_code=stock
                             )
         except:
             print u'获取个股信息失败.'
+            stock_info = dict()
+            stock_info['basic_score'] = "None"
+            stock_info['basic_info'] = "None"
+            stock_info['stock_analysis'] = "None"
+            stock_info['active_score'] = "None"
+            stock_info['active_info'] = "None"
+            stock_info['stock_businiess'] = "None"
+            stock_info['stock_concept'] = "None"
             self.render("index.html",
                         market=[market_score, market_info],
                         market_hot=[hot_stock_list, hot_concept_dict],
-                        stock_self=["None", "None", "None", "None"]
+                        stock_self=stock_info,
+                        stock_code=u"None"
                         )
 
 

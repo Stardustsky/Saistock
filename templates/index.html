@@ -42,19 +42,24 @@
     </form>
     <div>
         <p>
-            <h4>股票代码：</h4>{{stock_self[4]}}
+            <b>股票代码：</b>{{stock_code}}
+            <b>主营业务：</b>{{stock_self['stock_businiess']}}
+            <b>股票概念：</b>{{stock_self['stock_concept']}}
         </p>
         <p>
-            <h4>个股活跃度：</h4>{{stock_self[0]}}
+            <h4>个股活跃度：</h4>{{stock_self["active_score"]}}
         </p>
         <p>
-            <h4>个股(活跃度/价格)信息：</h4>{{stock_self[1]}}
+            <h4>个股(活跃度/价格)信息：</h4>{{stock_self["active_info"]}}
         </p>
         <p>
-            <h4>个股基本面：</h4>{{stock_self[2]}}
+            <h4>个股基本面：</h4>{{stock_self["basic_score"]}}
         </p>
         <p>
-            <h4>个股基本面信息：</h4>{{stock_self[3]}}
+            <h4>个股基本面信息：</h4>{{stock_self["basic_info"]}}
+        </p>
+        <p>
+            <h4>同花顺分析：</h4>{{stock_self["stock_analysis"]}}
         </p>
 
     </div>
