@@ -3,43 +3,62 @@
 <head>
     <meta charset="UTF-8">
     <title>市场行情面板</title>
+    <link rel="stylesheet" href="static/css/stock.css" type="text/css" />
 </head>
 <body>
 <div>
     <center><h2>市场整体情绪分析</h2></center>
-    <p>市场行情得分：{{market[0]}}</p>
-    <p>市场行情分析：{{market[1][0]}}</p>
-    <p>美股行情分析：{{market[1][1]}}</p>
-    <p>A50行情分析：{{market[1][2]}}</p>
+    <p>
+        <span style="width: 20%"><b>市场行情得分：</b>{{market[0]}}</span>
+    </p>
+    <p>
+        <span style="width: 20%"><b>美股行情分析：</b>{{market[1][1]}}</span>
+    </p>
+    <p>
+        <span style="width: 20%"><b>A50行情分析：</b>{{market[1][2]}}</span>
+    </p>
+    <p>
+        <span style="width: 20%"><b>市场整体行情分析：</b>{{market[1][0]}}</span>
+    </p>
 </div>
 <hr>
 <div>
     <center><h2>市场热点整理分析</h2></center>
     <p>
     <h3>市场热点股票：</h3>
-        {%for i in market_hot[0]%}
-        {{i}} |
-        {% end %}
+    {%for i in market_hot[0]%}
+    <a target="_blank" class="font_a" href='http://www.iwencai.com/stockpick/search?tid=stockpick&qs=sl_box_main_ths&w={{i}}'>{{i}}</a> |
+    {% end %}
     </p>
-    <p>
-        <h3>市场热点概念：</h3>
-        {%for i in market_hot[1]%}
-        <p><li>{{i}}: {{market_hot[1][i]}}</li></p>
-        {% end %}
-    </p>
+    <h3>市场热点概念：</h3>
+    <div>
+        <ul>
+            {%for i in market_hot[1]%}
+            <li>
+            <a target="_blank" class="font_a" href="http://www.iwencai.com/stockpick/search?preParams=&ts=1&f=1&qs=lm_hltj_tj_query&querytype=&tid=stockpick&queryarea=all&w={{i}}">{{i}}:
+                {{market_hot[1][i]}}</a>
+            </li>
+
+            {% end %}
+        </ul>
+
+    </div>
 </div>
 <hr>
 <div>
-    <center><h2>个股分析</h2></center>
-    <form action="" method="get">
-        股票代码（eg：1000858）：
-        <input type="text" name="stock">
-        <select name="select_type">
-            <option value ="short">短线</option>
-            <option value ="long">长线</option>
-        </select>
-        <input type="submit" name="sub" value="提交">
-    </form>
+    <h2 align="center">个股分析</h2>
+    <div align="center">
+            <form action="" method="get">
+                <input type="text" name="stock" class="bar1_input" placeholder="输入股票代码，如：1000858">
+                    <select class="bar1_select" name="select_type" >
+                        <option value="short">短线</option>
+                        <option value="long">长线</option>
+                    </select>
+                <input type="submit" class="bar1_submit" name="sub" value="提交" >
+            </form>
+    </div>
+</div>
+
     <div>
         <p>
             <b>股票代码：</b>{{stock_code}}
@@ -47,19 +66,19 @@
             <b>股票概念：</b>{{stock_self['stock_concept']}}
         </p>
         <p>
-            <h4>个股活跃度：</h4>{{stock_self["active_score"]}}
+        <h4>个股活跃度：</h4>{{stock_self["active_score"]}}
         </p>
         <p>
-            <h4>个股(活跃度/价格)信息：</h4>{{stock_self["active_info"]}}
+        <h4>个股(活跃度/价格)信息：</h4>{{stock_self["active_info"]}}
         </p>
         <p>
-            <h4>个股基本面：</h4>{{stock_self["basic_score"]}}
+        <h4>个股基本面：</h4>{{stock_self["basic_score"]}}
         </p>
         <p>
-            <h4>个股基本面信息：</h4>{{stock_self["basic_info"]}}
+        <h4>个股基本面信息：</h4>{{stock_self["basic_info"]}}
         </p>
         <p>
-            <h4>同花顺分析：</h4>{{stock_self["stock_analysis"]}}
+        <h4>同花顺分析：</h4>{{stock_self["stock_analysis"]}}
         </p>
 
     </div>
