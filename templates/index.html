@@ -21,7 +21,17 @@
         <tr>
             <td class="td_key">市场行情分析：</td><td>{{market[1][0]}}</td>
         </tr>
-
+    </table>
+    <table border="0" >
+        <tr>
+            <td class="td_key">北向资金流动情况：</td><td>{{money['bx']/10000.0}}亿</td>
+        </tr>
+        <tr>
+            <td class="td_key">南向资金流动情况：</td><td>{{money['nx']/10000.0}}亿</td>
+        </tr>
+        <tr>
+            <td class="td_key">资金流向分析：</td><td>{{money['info']}}</td>
+        </tr>
     </table>
 </div>
 <hr>

@@ -10,6 +10,7 @@ import os
 import pandas as pd
 import datetime
 import sys
+import json
 from selenium import webdriver
 
 
@@ -199,9 +200,28 @@ def driver_init():
     return chrome
 
 
+def get_money_flow():
+    """
+    抓取南北向资金流动情况,主要以北向资金为准
+    :return:
+    """
+    money_flow = dict()
+    url = "http://push2.eastmoney.com/api/qt/kamt/get?fields1=f1,f2,f3,f4&fields2=f51,f52,f53,f54"
+    response = urllib2.urlopen(url).read()
+    money = json.loads(response)['data']
+    # 北向资金流向
+    money_flow['hk2sz'] = money['hk2sz']['dayNetAmtIn']
+    money_flow['hk2sh'] = money['hk2sh']['dayNetAmtIn']
+    # 南向资金流向
+    money_flow['sz2hk'] = money['sz2hk']['dayNetAmtIn']
+    money_flow['sh2hk'] = money['sh2hk']['dayNetAmtIn']
+
+    return money_flow
+
 # print get_a50_index_data()
 # print get_china_index_data()
 # print get_usa_index_data()
 # print get_stock_info()["stock_value"]
 # print get_stock_info("600155")
 # print get_hot_plate()
+# get_money_flow()
