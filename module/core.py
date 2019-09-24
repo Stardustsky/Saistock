@@ -8,7 +8,7 @@
 import os
 from multiprocessing import Pool
 from initial import read_stock_conf
-from stock_market import market_emotion_index
+from stock_market import market_emotion_index, market_money
 from stock_self import mid_stock_basic,get_stock_active,short_stock_basic
 from spider import get_hot_plate
 
@@ -19,7 +19,8 @@ def market_status():
     :return:
     """
     market_score, market_info = market_emotion_index()
-    return market_score, market_info
+    money_flow = market_money()
+    return market_score, market_info, money_flow
 
 
 def stock_status(stock_code, stock_type="short"):

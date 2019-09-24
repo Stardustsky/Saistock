@@ -18,7 +18,7 @@ from module.core import news_status,market_status,plate_status,stock_status
 class IndexHandler(tornado.web.RequestHandler):
 
     def get(self):
-        market_score, market_info = market_status()
+        market_score, market_info, money_flow = market_status()
         hot_stock_list, hot_concept_dict = plate_status()
         try:
             stock = str(self.get_argument("stock"))
@@ -28,6 +28,7 @@ class IndexHandler(tornado.web.RequestHandler):
                 stock_info = stock_status(stock, stock_type=select_type)
                 self.render("index.html",
                             market=[market_score, market_info],
+                            money=money_flow,
                             market_hot=[hot_stock_list, hot_concept_dict],
                             stock_self=stock_info,
                             stock_code=stock
@@ -44,6 +45,7 @@ class IndexHandler(tornado.web.RequestHandler):
             stock_info['stock_concept'] = "None"
             self.render("index.html",
                         market=[market_score, market_info],
+                        money=money_flow,
                         market_hot=[hot_stock_list, hot_concept_dict],
                         stock_self=stock_info,
                         stock_code=u"None"

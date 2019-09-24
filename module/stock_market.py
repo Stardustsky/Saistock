@@ -5,7 +5,7 @@
 # @File    : stock_market.py
 # @Software: PyCharm
 
-from spider import get_usa_index_data,get_a50_index_data,get_china_index_data
+from spider import get_usa_index_data,get_a50_index_data,get_china_index_data,get_money_flow
 
 
 def external_index():
@@ -143,7 +143,35 @@ def market_emotion_index(idx_type="short"):
         return market_score, [market_info, usa_info, a50_info]
 
 
+def market_money():
+    money_flow = get_money_flow()
+    money_flow_dict = dict()
+    money_flow_info = ""
+    bx = int(money_flow['hk2sz']) + int(money_flow['hk2sh'])
+    nx = int(money_flow['sz2hk']) + int(money_flow['sh2hk'])
+    if bx > 500000:
+        money_flow_info = u"北向资金大幅流入，市场大概率迎来大涨"
+    if 500000 > bx >= 200000:
+        money_flow_info = u"北向资金流入较多，市场大概率迎来上涨"
+    if 200000 > bx >= 100000:
+        money_flow_info = u"北向资金少量流入，市场可能震荡微涨"
+    if 100000 > bx >= -100000:
+        money_flow_info = u"北向资金正常波动，市场正常震荡"
+    if -100000 > bx >= -200000:
+        money_flow_info = u"北向资金呈流出状态，市场可能迎来下跌"
+    if -200000 > bx >= -450000:
+        money_flow_info = u"北向资金流出较多，市场可能迎来大跌"
+    if -450000 > bx:
+        money_flow_info = u"北向资金大幅流出，市场可能迎来暴跌"
+    money_flow_dict['bx'] = bx
+    money_flow_dict['nx'] = nx
+    money_flow_dict['info'] = money_flow_info
+    return money_flow_dict
+
+
+
 # print market_emotion_index()[0]
 # print market_emotion_index()[1][0]
 # print market_emotion_index()[1][1]
 # print market_emotion_index()[1][2]
+# market_money()
