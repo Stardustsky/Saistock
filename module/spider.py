@@ -175,6 +175,7 @@ def get_stock_info(stock):
         # 公司重大事项
         stock_info["affair"] = driver.find_element_by_xpath('//*[@id="dp_block_1"]/div/div[1]/table').text
     except Exception as e:
+        stock_info["stock_news"] = ""
         stock_info["affair"] = ""
     driver.quit()
 
