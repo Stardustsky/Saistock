@@ -13,6 +13,7 @@ import urllib
 import HTMLParser
 import json
 from module.core import news_status,market_status,plate_status,stock_status
+from module.func import *
 
 
 class IndexHandler(tornado.web.RequestHandler):
@@ -61,15 +62,8 @@ class IndexHandler(tornado.web.RequestHandler):
 
 
     def post(self):
-        payload = self.request
-        print payload
-        try:
-            pass
-
-        except Exception as e:
-            self.render("index.html", outsql="", postsql="输入异常")
-
-        self.render("index.html", outsql="", postsql="")
+        stock_code = read_stock_conf()
+        print stock_code
 
 
 

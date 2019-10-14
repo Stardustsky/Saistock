@@ -41,7 +41,7 @@ li a:hover{
     font-family: FontAwesome;
     color: #F9F0DA;
     font-size: 14px;
-    border-radius: 0 5px 5px 0;
+    /*border-radius: 0 5px 5px 0;*/
 }
 
 .bar1_select{

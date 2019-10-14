@@ -226,7 +226,9 @@ def nine_change(stock):
     if (float(data[-1]['low']) < float(data[-3]['low']) and float(data[-1]['low']) < float(data[-4]['low'])) or (float(data[-2]['low']) < float(data[-3]['low']) and float(data[-2]['low']) < float(data[-4]['low'])):
         if float(data[-4]['close']) < float(data[-8]['close']):
             nine_change_info = u"六转买入信号已现，请注意观察"
+            nine_change_index = 2
             if float(data[-8]['close']) < float(data[-12]['close']):
+                nine_change_index = 2
                 nine_change_info = u"八转买入信号已现，请关注是否出现九转"
                 if float(data[-9]['close']) < float(data[-13]['close']):
                     nine_change_info = u"九转买入信号已现，请考虑抄底"
@@ -235,8 +237,10 @@ def nine_change(stock):
     if (float(data[-1]['high']) > float(data[-3]['high']) and float(data[-1]['high']) > float(data[-4]['high'])) or (float(data[-2]['high']) > float(data[-3]['high']) and float(data[-2]['high']) > float(data[-4]['high'])):
         if float(data[-4]['close']) > float(data[-8]['close']):
             nine_change_info = u"六转卖出信号已现，请注意观察"
+            nine_change_index = 2
             if float(data[-8]['close']) > float(data[-12]['close']):
                 nine_change_info = u"八转卖出信号已现，请注意九转卖出信号"
+                nine_change_index = 2
                 if float(data[-9]['close']) > float(data[-13]['close']):
                     nine_change_info = u"九转卖出信号已现，请考虑卖出或减小仓位"
                     nine_change_index = -1

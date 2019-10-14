@@ -13,10 +13,8 @@ from email.header import Header
 def read_stock_conf():
     stock_no = dict()
     config = ConfigParser.ConfigParser()
-    config.readfp(open("common/stock.ini"), "rb")
+    config.readfp(open("module/common/stock.ini"), "rb")
     code = config.items("stock_code")
-    # for i in code:
-    #      stock_no[i[0]] = i[1]
     return code
 
 
@@ -49,4 +47,4 @@ def stock_email(stockName):
 # print len(aa)
 # print aa[0]
 
-stock_email("天齐锂业")
+# stock_email("天齐锂业")
