@@ -7,9 +7,8 @@
 
 import os
 from multiprocessing import Pool
-from initial import read_stock_conf
 from stock_market import market_emotion_index, market_money
-from stock_self import mid_stock_basic,get_stock_active,short_stock_basic
+from stock_self import mid_stock_basic,get_stock_active,short_stock_basic, nine_change
 from spider import get_hot_plate
 
 
@@ -32,18 +31,24 @@ def stock_status(stock_code, stock_type="short"):
     """
     if stock_type == "short":
         stock_active_score, stock_active_info = get_stock_active(stock_code, stock_type)
+        nine_change_index, nine_change_info = nine_change(stock_code)
         stock_code = stock_code[1:]
         stock_info = short_stock_basic(stock_code)
         stock_info['active_score'] = stock_active_score
         stock_info['active_info'] = stock_active_info
-        print stock_info
+        stock_info['nine_change_index'] = nine_change_index
+        stock_info['nine_change_info'] = nine_change_info
         return stock_info
+
     elif stock_type == "long":
         stock_long_score, stock_long_info = get_stock_active(stock_code, stock_type)
+        nine_change_index, nine_change_info = nine_change(stock_code)
         stock_code = stock_code[1:]
         stock_info = mid_stock_basic(stock_code)
         stock_info['active_score'] = stock_long_score
         stock_info['active_info'] = stock_long_info
+        stock_info['nine_change_index'] = nine_change_index
+        stock_info['nine_change_info'] = nine_change_info
         return stock_info
 
 

@@ -40,6 +40,7 @@ def get_price_data(stock, t_length=-100):
     else:
         print u"[info]输入股票代码有误，请核对后重新输入"
     df = df[(True ^ df['成交量'].isin([0]))]
+
     stock_avarage_price = df['收盘价'].mean()
     stock_max_price = df['收盘价'].max()
     stock_buttom_price = df['收盘价'].min()
@@ -48,7 +49,8 @@ def get_price_data(stock, t_length=-100):
     stock_100_volume = df['成交量'][0:50].mean()
     stock_3_volume = df['成交量'][0:3].mean()
     stock_active = stock_3_volume / stock_100_volume
-    return stock_max_price, stock_buttom_price, stock_avarage_price, stock_now_price, stock_active, stock_price_range
+    stock_nine_change = df[0:13]
+    return stock_max_price, stock_buttom_price, stock_avarage_price, stock_now_price, stock_active, stock_price_range, stock_nine_change
     # except:
     #     print u"[info]输入股票代码有误，请核对后重新输入"
 
@@ -175,8 +177,8 @@ def get_stock_info(stock):
         # 公司重大事项
         stock_info["affair"] = driver.find_element_by_xpath('//*[@id="dp_block_1"]/div/div[1]/table').text
     except Exception as e:
-        stock_info["stock_news"] = ""
-        stock_info["affair"] = ""
+        stock_info["stock_news"] = "None"
+        stock_info["affair"] = "None"
     driver.quit()
 
     return stock_info
@@ -219,6 +221,28 @@ def get_money_flow():
 
     return money_flow
 
+
+def get_stock_data(stock):
+    # now_time = datetime.datetime.now().strftime('%Y%m%d')
+    # old_time = (datetime.datetime.now() + datetime.timedelta(days=t_length)).strftime('%Y%m%d')
+    # print stock[1]
+    if stock[0] == "0":
+        stock = "sh"+stock[1:]
+    else:
+        stock = "sz"+stock[1:]
+    wy_api = "http://money.finance.sina.com.cn/quotes_service/api/json_v2.php/CN_MarketData.getKLineData?symbol=%s&scale=240&ma=no&datalen=20" %stock
+    response = urllib2.urlopen(wy_api)
+    data = response.read()
+    data = str.replace(data,"day","\"day\"")
+    data = str.replace(data, "open", "\"open\"")
+    data = str.replace(data, "high", "\"high\"")
+    data = str.replace(data, "low", "\"low\"")
+    data = str.replace(data, "close", "\"close\"")
+    data = str.replace(data, "volume", "\"volume\"")
+    data = json.loads(data)
+    return data
+
+
 # print get_a50_index_data()
 # print get_china_index_data()
 # print get_usa_index_data()
@@ -226,3 +250,5 @@ def get_money_flow():
 # print get_stock_info("600155")
 # print get_hot_plate()
 # get_money_flow()
+
+# get_stock_data("002466")

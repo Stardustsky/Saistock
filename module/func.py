@@ -49,4 +49,4 @@ def stock_email(stockName):
 # print len(aa)
 # print aa[0]
 
-stock_email()
+stock_email("天齐锂业")

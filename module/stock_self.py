@@ -5,7 +5,7 @@
 # @File    : stock_self.py
 # @Software: PyCharm
 
-from spider import get_price_data, get_stock_info
+from spider import get_price_data, get_stock_info, get_stock_data
 
 
 def mid_stock_basic(stock):
@@ -182,7 +182,7 @@ def get_stock_active(stock, stock_type="short"):
     :return:
     """
 
-    stock_max_price, stock_buttom_price, stock_avarage_price, stock_now_price, stock_active, stock_price_range = get_price_data(
+    stock_max_price, stock_buttom_price, stock_avarage_price, stock_now_price, stock_active, stock_price_range,stock_nine_change = get_price_data(
         stock)
     # 股票价格位置概况
     stock_long_line = stock_now_price / stock_max_price
@@ -202,6 +202,7 @@ def get_stock_active(stock, stock_type="short"):
         elif 0.8 > stock_active:
             stock_active_info = u"股票大幅缩量，关注是否开始形成转折"
         return stock_active, stock_active_info
+
     if stock_type == "long":
         if stock_long_line >= 0.95:
             stock_long_line_info = u"股票价格接近100天内最高点，除业绩飙升外不适合长线持有"
@@ -218,7 +219,34 @@ def get_stock_active(stock, stock_type="short"):
         return stock_long_line, stock_long_line_info
 
 
+def nine_change(stock):
+    data = get_stock_data(stock)
+    nine_change_index = 0
+    nine_change_info = "None"
+    if (float(data[-1]['low']) < float(data[-3]['low']) and float(data[-1]['low']) < float(data[-4]['low'])) or (float(data[-2]['low']) < float(data[-3]['low']) and float(data[-2]['low']) < float(data[-4]['low'])):
+        if float(data[-4]['close']) < float(data[-8]['close']):
+            nine_change_info = u"六转买入信号已现，请注意观察"
+            if float(data[-8]['close']) < float(data[-12]['close']):
+                nine_change_info = u"八转买入信号已现，请关注是否出现九转"
+                if float(data[-9]['close']) < float(data[-13]['close']):
+                    nine_change_info = u"九转买入信号已现，请考虑抄底"
+                    nine_change_index = 1
+
+    if (float(data[-1]['high']) > float(data[-3]['high']) and float(data[-1]['high']) > float(data[-4]['high'])) or (float(data[-2]['high']) > float(data[-3]['high']) and float(data[-2]['high']) > float(data[-4]['high'])):
+        if float(data[-4]['close']) > float(data[-8]['close']):
+            nine_change_info = u"六转卖出信号已现，请注意观察"
+            if float(data[-8]['close']) > float(data[-12]['close']):
+                nine_change_info = u"八转卖出信号已现，请注意九转卖出信号"
+                if float(data[-9]['close']) > float(data[-13]['close']):
+                    nine_change_info = u"九转卖出信号已现，请考虑卖出或减小仓位"
+                    nine_change_index = -1
+
+    return nine_change_index, nine_change_info
+
+
+
 # print stock_active("1000858")[1]
 # print stock_active("0600519")[1]
 # print stock_active("0600626")[1]
 # print get_stock_active("0600624")
+# print nine_change("0600624")

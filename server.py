@@ -45,6 +45,8 @@ class IndexHandler(tornado.web.RequestHandler):
             stock_info['stock_concept'] = "None"
             stock_info['stock_news'] = "None"
             stock_info['affair'] = "None"
+            stock_info['nine_change_index'] = "0"
+            stock_info['nine_change_info'] = "None"
             self.render("index.html",
                         market=[market_score, market_info],
                         money=money_flow,
