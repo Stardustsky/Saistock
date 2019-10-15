@@ -13,12 +13,12 @@ from email.header import Header
 def read_stock_conf():
     stock_no = dict()
     config = ConfigParser.ConfigParser()
-    config.readfp(open("module/common/stock.ini"), "rb")
+    config.readfp(open("common/stock.ini"), "rb")
     code = config.items("stock_code")
     return code
 
 
-def stock_email(stockName):
+def stock_email(recv,mess):
     """
     邮件提醒功能
     :param stockName:
@@ -29,8 +29,8 @@ def stock_email(stockName):
     mail_user = "sai_stock@sina.com"  # 用户名
     mail_pass = "e763eedb6a5d7c3b"  # 口令
     sender = 'sai_stock@sina.com'
-    receiver = '454640446@qq.com'
-    message = MIMEText('股票%s已达到目标价位，请您关注'%stockName,_charset='utf-8')
+    receiver = recv
+    message = MIMEText(mess, _charset='utf-8')
     message['From'] = Header(sender)
     message['To'] = Header(receiver, 'utf-8')
     subject = "股票提醒"
@@ -48,3 +48,4 @@ def stock_email(stockName):
 # print aa[0]
 
 # stock_email("天齐锂业")
+# print read_stock_conf()
