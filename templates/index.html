@@ -11,27 +11,21 @@
 <div>
     <center><h2>市场整体情绪分析</h2></center>
     <table border="0">
+        <!--<tr>-->
+            <!--<td class="td_key">美股行情分析：</td><td>{{market[1][1]}}</td>-->
+        <!--</tr>-->
+
         <tr>
-            <td class="td_key">市场行情得分：</td><td>{{market[0]}}</td>
+            <td class="td_key">美股行情分析：</td><td colspan="2">{{market[1][1]}}</td>
+            <td class="td_key">A50行情分析：</td><td colspan="2">{{market[1][2]}}</td>
         </tr>
         <tr>
-            <td class="td_key">美股行情分析：</td><td>{{market[1][1]}}</td>
+            <td class="td_key">市场行情得分：</td><td colspan="1">{{market[0]}}</td>
+            <td class="td_key">市场行情分析：</td><td colspan="4">{{market[1][0]}}</td>
         </tr>
-        <tr>
-            <td class="td_key">A50行情分析：</td><td>{{market[1][2]}}</td>
-        </tr>
-        <tr>
-            <td class="td_key">市场行情分析：</td><td>{{market[1][0]}}</td>
-        </tr>
-    </table>
-    <table border="0" >
         <tr>
             <td class="td_key">北向资金流动情况：</td><td>{{money['bx']/10000.0}}亿</td>
-        </tr>
-        <tr>
             <td class="td_key">南向资金流动情况：</td><td>{{money['nx']/10000.0}}亿</td>
-        </tr>
-        <tr>
             <td class="td_key">资金流向分析：</td><td>{{money['info']}}</td>
         </tr>
     </table>

@@ -9,14 +9,16 @@ from stock_self import nine_change
 import datetime
 import time
 
-def nine_change_notice():
+
+def nine_change_notice(mails_list):
     dict_info = ""
     code = read_stock_conf()
     for key, value in code:
         res = nine_change(key)
         dict_info += key[1:]+":"+unicode(value, 'utf-8')+":[info] "+res[1]+"\n"
     print dict_info
-    stock_email('454640446@qq.com', dict_info)
+    for mail in mails_list:
+        stock_email(mail, dict_info)
     return dict_info
 
 
@@ -39,7 +41,8 @@ def clock_notice():
 
 
 
+
 def notice_center():
     pass
 
-clock_notice()
+# nine_change_notice(mails)

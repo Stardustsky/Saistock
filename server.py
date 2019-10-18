@@ -13,7 +13,7 @@ import urllib
 import HTMLParser
 import json
 from module.core import news_status,market_status,plate_status,stock_status
-from module.func import *
+from module.stock_notice import *
 
 
 class IndexHandler(tornado.web.RequestHandler):
@@ -62,8 +62,8 @@ class IndexHandler(tornado.web.RequestHandler):
 
 
     def post(self):
-        stock_code = read_stock_conf()
-        print stock_code
+        mails = ['454640446@qq.com', 'zer0forpentest@126.com']
+        res = nine_change_notice(mails)
 
 
 

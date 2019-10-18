@@ -13,7 +13,7 @@ from email.header import Header
 def read_stock_conf():
     stock_no = dict()
     config = ConfigParser.ConfigParser()
-    config.readfp(open("common/stock.ini"), "rb")
+    config.readfp(open("module/common/stock.ini"), "rb")
     code = config.items("stock_code")
     return code
 
@@ -36,13 +36,17 @@ def stock_email(recv,mess):
     subject = "股票提醒"
     try:
         message['Subject'] = Header(subject, 'utf-8')
-        smtpObj = smtplib.SMTP()
-        smtpObj.connect(mail_host, 25)  # 25 为 SMTP 端口号
-        smtpObj.login(mail_user, mail_pass)
-        smtpObj.sendmail(sender, receiver, message.as_string())
+        smtpobj = smtplib.SMTP()
+        smtpobj.connect(mail_host, 25)  # 25 为 SMTP 端口号
+        smtpobj.login(mail_user, mail_pass)
+        smtpobj.sendmail(sender, receiver, message.as_string())
         print "邮件发送成功"
     except smtplib.SMTPException:
         print "Error: 无法发送邮件"
+
+
+
+
 # aa = read_stock_conf()
 # print len(aa)
 # print aa[0]

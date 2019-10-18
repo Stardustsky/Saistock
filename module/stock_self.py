@@ -223,6 +223,7 @@ def nine_change(stock):
     data = get_stock_data(stock)
     nine_change_index = 0
     nine_change_info = "None"
+    # print data[-1]['low']
     if (float(data[-1]['low']) < float(data[-3]['low']) and float(data[-1]['low']) < float(data[-4]['low'])) or (float(data[-2]['low']) < float(data[-3]['low']) and float(data[-2]['low']) < float(data[-4]['low'])):
         if float(data[-4]['close']) < float(data[-8]['close']):
             nine_change_info = u"六转买入信号已现，请注意观察"
