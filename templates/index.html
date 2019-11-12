@@ -50,7 +50,18 @@
 
             {% end %}
         </ul>
+    </div>
+    <h3>机构调研信息:</h3>
+    <div>
+        <ul>
+            {%for i in market_hot[2]%}
+            <li>
+                <a target="_blank" class="font_a" href="http://data.eastmoney.com/report/zw_stock.jshtml?encodeUrl={{i}}">
+                    {{market_hot[2][i]}}</a>
+            </li>
 
+            {% end %}
+        </ul>
     </div>
 </div>
 <hr>

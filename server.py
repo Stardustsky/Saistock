@@ -20,7 +20,7 @@ class IndexHandler(tornado.web.RequestHandler):
 
     def get(self):
         market_score, market_info, money_flow = market_status()
-        hot_stock_list, hot_concept_dict = plate_status()
+        hot_info = plate_status()
         try:
             stock = str(self.get_argument("stock"))
             select_type = str(self.get_argument("select_type"))
@@ -30,7 +30,7 @@ class IndexHandler(tornado.web.RequestHandler):
                 self.render("index.html",
                             market=[market_score, market_info],
                             money=money_flow,
-                            market_hot=[hot_stock_list, hot_concept_dict],
+                            market_hot=hot_info,
                             stock_self=stock_info,
                             stock_code=stock
                             )
@@ -51,7 +51,7 @@ class IndexHandler(tornado.web.RequestHandler):
             self.render("index.html",
                         market=[market_score, market_info],
                         money=money_flow,
-                        market_hot=[hot_stock_list, hot_concept_dict],
+                        market_hot=hot_info,
                         stock_self=stock_info,
                         stock_code=u"None"
                         )

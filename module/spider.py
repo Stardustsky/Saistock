@@ -223,6 +223,11 @@ def get_money_flow():
 
 
 def get_stock_data(stock):
+    """
+    获取股票价格信息
+    :param stock:
+    :return:
+    """
     # now_time = datetime.datetime.now().strftime('%Y%m%d')
     # old_time = (datetime.datetime.now() + datetime.timedelta(days=t_length)).strftime('%Y%m%d')
     # print stock[1]
@@ -233,7 +238,7 @@ def get_stock_data(stock):
     wy_api = "http://money.finance.sina.com.cn/quotes_service/api/json_v2.php/CN_MarketData.getKLineData?symbol=%s&scale=240&ma=no&datalen=20" %stock
     response = urllib2.urlopen(wy_api)
     data = response.read()
-    data = str.replace(data,"day","\"day\"")
+    data = str.replace(data, "day", "\"day\"")
     data = str.replace(data, "open", "\"open\"")
     data = str.replace(data, "high", "\"high\"")
     data = str.replace(data, "low", "\"low\"")
@@ -243,6 +248,20 @@ def get_stock_data(stock):
     return data
 
 
+def get_research_report():
+    now_time = datetime.datetime.now().strftime('%Y-%m-%d')
+    old_time = (datetime.datetime.now() - datetime.timedelta(days=10)).strftime('%Y-%m-%d')
+    report_api = "http://reportapi.eastmoney.com/report/list?cb=datatable4702022&industryCode=*&pageSize=20&industry=*&rating=*&ratingChange=0&beginTime=%s&endTime=%s&pageNo=1&fields=&qType=0&orgCode=&code=*&rcode=&_=1573441834847"%(old_time,now_time)
+    report_dict = dict()
+    response = urllib2.urlopen(report_api)
+    data = response.read()
+    data = str.replace(data,"datatable4702022(", "")
+    data = str.replace(data, ")", "")
+    data = json.loads(data)["data"]
+    for i in data:
+        info = i["publishDate"] + " [" + i["stockName"] + "] " + i["title"]+" - "+i["orgSName"]
+        report_dict[i["encodeUrl"]] = info
+    return report_dict
 # print get_a50_index_data()
 # print get_china_index_data()
 # print get_usa_index_data()
@@ -252,3 +271,4 @@ def get_stock_data(stock):
 # get_money_flow()
 
 # get_stock_data("002466")
+# print get_research_report()

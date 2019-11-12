@@ -9,7 +9,7 @@ import os
 from multiprocessing import Pool
 from stock_market import market_emotion_index, market_money
 from stock_self import mid_stock_basic,get_stock_active,short_stock_basic, nine_change
-from spider import get_hot_plate
+from spider import get_hot_plate,get_research_report
 
 
 def market_status():
@@ -57,10 +57,11 @@ def news_status(stock_code):
 
 def plate_status():
     """
-    获得当前市场热点
+    获得当前市场热点以及机构调研结果
     :return:
     """
     hot_stock_list, hot_concept_dict = get_hot_plate()
-    return hot_stock_list, hot_concept_dict
+    research_report = get_research_report()
+    return hot_stock_list, hot_concept_dict, research_report
 
 # print stock_status("0600624")
