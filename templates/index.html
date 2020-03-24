@@ -11,10 +11,6 @@
 <div>
     <center><h2>市场整体情绪分析</h2></center>
     <table border="0">
-        <!--<tr>-->
-            <!--<td class="td_key">美股行情分析：</td><td>{{market[1][1]}}</td>-->
-        <!--</tr>-->
-
         <tr>
             <td class="td_key">美股行情分析：</td><td colspan="2">{{market[1][1]}}</td>
             <td class="td_key">A50行情分析：</td><td colspan="2">{{market[1][2]}}</td>
@@ -29,6 +25,10 @@
             <td class="td_key">资金流向分析：</td><td>{{money['info']}}</td>
         </tr>
     </table>
+</div>
+<hr>
+<div align="center">
+    <input type="button" class="bar1_submit" style="width:10%;height: 40px" name="9" onclick="nine_change()" value="九转测试" >
 </div>
 <hr>
 <div>
@@ -47,7 +47,6 @@
             <a target="_blank" class="font_a" href="http://www.iwencai.com/stockpick/search?preParams=&ts=1&f=1&qs=lm_hltj_tj_query&querytype=&tid=stockpick&queryarea=all&w={{i}}">{{i}}:
                 {{market_hot[1][i]}}</a>
             </li>
-
             {% end %}
         </ul>
     </div>
@@ -110,11 +109,7 @@
         </tr>
     </table>
 </div>
-<hr>
-<div align="center">
-    <h2 align="center">九转序列测试</h2>
-    <input type="button" class="bar1_submit" style="width:10%;height: 40px" name="9" onclick="nine_change()" value="九转测试" >
-</div>
+
 
 </body>
 </html>

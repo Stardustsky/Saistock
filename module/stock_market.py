@@ -5,7 +5,8 @@
 # @File    : stock_market.py
 # @Software: PyCharm
 
-from spider import get_usa_index_data,get_a50_index_data,get_china_index_data,get_money_flow
+from spider import get_usa_index_data,get_a50_index_data,get_china_index_data,get_money_flow,get_usa_futures_index
+
 
 
 def external_index():
@@ -169,6 +170,12 @@ def market_money():
     return money_flow_dict
 
 
+def usa_futures():
+    """
+    美股期指
+    :return:
+    """
+    usa_futures = get_usa_futures_index()
 
 # print market_emotion_index()[0]
 # print market_emotion_index()[1][0]

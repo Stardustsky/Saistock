@@ -12,49 +12,10 @@ import datetime
 import sys
 import json
 from selenium import webdriver
+from os import path
 
 
-def get_price_data(stock, t_length=-100):
-    """
-    获取股票100日内最高价/最低价/平均价/现价/10日涨跌幅/股票活跃度
-    :param stock:
-    :param t_length:
-    :return:
-    """
-    now_time = datetime.datetime.now().strftime('%Y%m%d')
-    old_time = (datetime.datetime.now() + datetime.timedelta(days=t_length)).strftime('%Y%m%d')
-    wy_api = "http://quotes.money.163.com/service/chddata.html?code=%s&start=%s&end=%s&fields=TCLOSE;HIGH;LOW;TOPEN;LCLOSE;CHG;PCHG;VOTURNOVER" % (
-    stock, old_time, now_time)
-    # try:
-    #     df = pd.read_csv("module/data/%s.csv" % stock)
-    # except:
-    response = urllib2.urlopen(wy_api)
-    data = response.read()
-    if len(data) > 100:
-        data = data.replace('\'', '')
-        data = data.decode('gbk').encode('utf-8')
-        obj = open("module/data/%s.csv" % stock, "w")
-        obj.write(data)
-        obj.close()
-        df = pd.read_csv("module/data/%s.csv" % stock)
-    else:
-        print u"[info]输入股票代码有误，请核对后重新输入"
-    df = df[(True ^ df['成交量'].isin([0]))]
-
-    stock_avarage_price = df['收盘价'].mean()
-    stock_max_price = df['收盘价'].max()
-    stock_buttom_price = df['收盘价'].min()
-    stock_now_price = df['收盘价'][1]
-    stock_price_range = df['涨跌幅'][0:10]
-    stock_100_volume = df['成交量'][0:50].mean()
-    stock_3_volume = df['成交量'][0:3].mean()
-    stock_active = stock_3_volume / stock_100_volume
-    stock_nine_change = df[0:13]
-    return stock_max_price, stock_buttom_price, stock_avarage_price, stock_now_price, stock_active, stock_price_range, stock_nine_change
-    # except:
-    #     print u"[info]输入股票代码有误，请核对后重新输入"
-
-
+# ========================================指数类宏观数据抓取函数===================================================
 def get_china_index_data():
     """
     获取上证指数，创业板指数
@@ -98,6 +59,19 @@ def get_usa_index_data():
     return nsdk_index, dqs_index
 
 
+def get_usa_futures_index(driver):
+    """
+    获取道琼斯30、标普500期货指数
+    :return:
+    """
+    usa_futures = dict()
+    futures_url = "https://cn.investing.com/indices/us-30-futures"
+    driver.get(futures_url)
+    usa_futures['dqs'] = float(driver.find_element_by_xpath('//*[@id="sb_changepc_8873"]').text[:-1])
+    usa_futures['bp'] = float(driver.find_element_by_xpath('//*[@id="sb_changepc_8839"]').text[:-1])
+    return usa_futures
+
+
 def get_a50_index_data():
     """
     获取富时A50行情
@@ -112,45 +86,53 @@ def get_a50_index_data():
     return a50_index
 
 
-def get_hot_plate():
+# ========================================个股数据抓取函数===================================================
+def get_price_data(stock, t_length=-100):
     """
-    获取热门股票以及板块信息
+    获取股票100日内最高价/最低价/平均价/现价/10日涨跌幅/股票活跃度
+    :param stock:
+    :param t_length:
     :return:
     """
-    driver = driver_init()
-    try:
-        # 获取热点股票列表
-        hot_stock_list = list()
-        base_url = "http://search.10jqka.com.cn/stockpick/search?typed=1&preParams=&ts=1&f=1&qs=result_rewrite&selfsectsn=&querytype=stock&searchfilter=&tid=stockpick&w=%E7%83%AD%E7%82%B9%E5%89%8D20%E6%8C%89%E6%B6%A8%E5%B9%85%E6%8E%92%E5%88%97&queryarea="
-        driver.get(base_url)
-        hot_stock = driver.find_element_by_xpath('//*[@id="tableWrap"]/div[2]/div/div[2]/div/table').text
-        data = hot_stock.split("\n")
-        for i in range(len(data) / 3):
-            hot_stock_list.append(data[i * 3 + 2])
+    now_time = datetime.datetime.now().strftime('%Y%m%d')
+    old_time = (datetime.datetime.now() + datetime.timedelta(days=t_length)).strftime('%Y%m%d')
+    wy_api = "http://quotes.money.163.com/service/chddata.html?code=%s&start=%s&end=%s&fields=TCLOSE;HIGH;LOW;TOPEN;LCLOSE;CHG;PCHG;VOTURNOVER" % (
+    stock, old_time, now_time)
+    response = urllib2.urlopen(wy_api)
+    data = response.read()
+    if len(data) > 100:
+        data = data.replace('\'', '')
+        data = data.decode('gbk').encode('utf-8')
+        obj = open("module/data/%s.csv" % stock, "w")
+        obj.write(data)
+        obj.close()
+        df = pd.read_csv("module/data/%s.csv" % stock)
+    else:
+        print u"[info]输入股票代码有误，请核对后重新输入"
+    df = df[(True ^ df['成交量'].isin([0]))]
 
-        # 获取热门概念及原因
-        hot_concept_dict = dict()
-        base_url = "http://search.10jqka.com.cn/stockpick?qs=return_stock"
-        driver.get(base_url)
-        hot_concept = driver.find_element_by_xpath('//*[@id="hltj_right_hc_query_li_st"]/ul').text
-        data = hot_concept.split("\n")
-        for i in range(len(data) / 3):
-            hot_concept_dict[(data[i * 3 + 1])] = data[i * 3 + 2]
-    except Exception as e:
-        print "[info]抓取信息失败."
+    stock_avarage_price = df['收盘价'].mean()
+    stock_max_price = df['收盘价'].max()
+    stock_buttom_price = df['收盘价'].min()
+    stock_now_price = df['收盘价'][1]
+    stock_price_range = df['涨跌幅'][0:10]
+    stock_100_volume = df['成交量'][0:50].mean()
+    stock_3_volume = df['成交量'][0:3].mean()
+    stock_active = stock_3_volume / stock_100_volume
+    stock_nine_change = df[0:13]
+    return stock_max_price, stock_buttom_price, stock_avarage_price, stock_now_price, stock_active, stock_price_range, stock_nine_change
+    # except:
+    #     print u"[info]输入股票代码有误，请核对后重新输入"
 
-    driver.quit()
-    return hot_stock_list, hot_concept_dict
 
-
-def get_stock_info(stock):
+def get_stock_info(stock, driver):
     """
     获取股票基本面信息
     :param stock:
     :param broser:
     :return:
     """
-    driver = driver_init()
+    # driver = driver_init()
     stock_info = dict()
     base_url = "http://search.10jqka.com.cn/stockpick/search?tid=stockpick&qs=stockpick_diag&ts=1&w=%s" % stock
     driver.get(base_url)
@@ -179,47 +161,9 @@ def get_stock_info(stock):
     except Exception as e:
         stock_info["stock_news"] = "None"
         stock_info["affair"] = "None"
-    driver.quit()
+    # driver.quit()
 
     return stock_info
-
-
-def driver_init():
-    """
-    webdriver初始化
-    :return:
-    """
-    if sys.platform == 'win32':
-        chromedriver = "module/driver/chromedriver.exe"
-    elif sys.platform == 'win64':
-        chromedriver = "module/driver/chromedriver.exe"
-    elif sys.platform == 'darwin':
-        chromedriver = "module/driver/chromedriver.mac"
-    os.environ["webdriver.chrome.driver"] = chromedriver
-    option = webdriver.ChromeOptions()
-    option.add_argument('--ignore-certificate-errors')
-    option.add_argument('headless')
-    chrome = webdriver.Chrome(chromedriver, chrome_options=option)
-    return chrome
-
-
-def get_money_flow():
-    """
-    抓取南北向资金流动情况,主要以北向资金为准
-    :return:
-    """
-    money_flow = dict()
-    url = "http://push2.eastmoney.com/api/qt/kamt/get?fields1=f1,f2,f3,f4&fields2=f51,f52,f53,f54"
-    response = urllib2.urlopen(url).read()
-    money = json.loads(response)['data']
-    # 北向资金流向
-    money_flow['hk2sz'] = money['hk2sz']['dayNetAmtIn']
-    money_flow['hk2sh'] = money['hk2sh']['dayNetAmtIn']
-    # 南向资金流向
-    money_flow['sz2hk'] = money['sz2hk']['dayNetAmtIn']
-    money_flow['sh2hk'] = money['sh2hk']['dayNetAmtIn']
-
-    return money_flow
 
 
 def get_stock_data(stock):
@@ -248,6 +192,57 @@ def get_stock_data(stock):
     return data
 
 
+# ========================================板块、热门、研报等分析数据抓取函数============================================
+def get_hot_plate(driver):
+    """
+    获取热门股票以及板块信息
+    :return:
+    """
+    # driver = driver_init()
+    try:
+        # 获取热点股票列表
+        hot_stock_list = list()
+        base_url = "http://search.10jqka.com.cn/stockpick/search?typed=1&preParams=&ts=1&f=1&qs=result_rewrite&selfsectsn=&querytype=stock&searchfilter=&tid=stockpick&w=%E7%83%AD%E7%82%B9%E5%89%8D20%E6%8C%89%E6%B6%A8%E5%B9%85%E6%8E%92%E5%88%97&queryarea="
+        driver.get(base_url)
+        hot_stock = driver.find_element_by_xpath('//*[@id="tableWrap"]/div[2]/div/div[2]/div/table').text
+        data = hot_stock.split("\n")
+        for i in range(len(data) / 3):
+            hot_stock_list.append(data[i * 3 + 2])
+
+        # 获取热门概念及原因
+        hot_concept_dict = dict()
+        base_url = "http://search.10jqka.com.cn/stockpick?qs=return_stock"
+        driver.get(base_url)
+        hot_concept = driver.find_element_by_xpath('//*[@id="hltj_right_hc_query_li_st"]/ul').text
+        data = hot_concept.split("\n")
+        for i in range(len(data) / 3):
+            hot_concept_dict[(data[i * 3 + 1])] = data[i * 3 + 2]
+    except Exception as e:
+        print "[info]抓取信息失败."
+
+    # driver.quit()
+    return hot_stock_list, hot_concept_dict
+
+
+def get_money_flow():
+    """
+    抓取南北向资金流动情况,主要以北向资金为准
+    :return:
+    """
+    money_flow = dict()
+    url = "http://push2.eastmoney.com/api/qt/kamt/get?fields1=f1,f2,f3,f4&fields2=f51,f52,f53,f54"
+    response = urllib2.urlopen(url).read()
+    money = json.loads(response)['data']
+    # 北向资金流向
+    money_flow['hk2sz'] = money['hk2sz']['dayNetAmtIn']
+    money_flow['hk2sh'] = money['hk2sh']['dayNetAmtIn']
+    # 南向资金流向
+    money_flow['sz2hk'] = money['sz2hk']['dayNetAmtIn']
+    money_flow['sh2hk'] = money['sh2hk']['dayNetAmtIn']
+
+    return money_flow
+
+
 def get_research_report():
     now_time = datetime.datetime.now().strftime('%Y-%m-%d')
     old_time = (datetime.datetime.now() - datetime.timedelta(days=10)).strftime('%Y-%m-%d')
@@ -262,6 +257,18 @@ def get_research_report():
         info = i["publishDate"] + " [" + i["stockName"] + "] " + i["title"]+" - "+i["orgSName"]
         report_dict[i["encodeUrl"]] = info
     return report_dict
+
+
+# ========================================其它数据抓取函数============================================
+
+
+
+
+
+
+
+
+
 # print get_a50_index_data()
 # print get_china_index_data()
 # print get_usa_index_data()
@@ -272,3 +279,4 @@ def get_research_report():
 
 # get_stock_data("002466")
 # print get_research_report()
+# get_usa_futures_index()

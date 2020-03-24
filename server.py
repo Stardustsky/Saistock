@@ -12,21 +12,25 @@ import tornado.httpserver
 import urllib
 import HTMLParser
 import json
-from module.core import news_status,market_status,plate_status,stock_status
+from module.core import news_status,market_status,plate_status,stock_status,core_func
 from module.stock_notice import *
+from module.func import *
 
 
 class IndexHandler(tornado.web.RequestHandler):
 
     def get(self):
-        market_score, market_info, money_flow = market_status()
-        hot_info = plate_status()
+        driver = driver_init()
+        market_score, market_info, money_flow, hot_info = core_func(driver)
+        driver.quit()
         try:
             stock = str(self.get_argument("stock"))
             select_type = str(self.get_argument("select_type"))
             sub = self.get_argument("sub")
             if sub:
-                stock_info = stock_status(stock, stock_type=select_type)
+                driver = driver_init()
+                stock_info = stock_status(stock, driver, stock_type=select_type)
+                driver.quit()
                 self.render("index.html",
                             market=[market_score, market_info],
                             money=money_flow,

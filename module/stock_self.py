@@ -91,12 +91,12 @@ def mid_stock_basic(stock):
     return stock_info
 
 
-def short_stock_basic(stock):
+def short_stock_basic(stock, driver):
     """
     短线股票基本面分析
     :return:
     """
-    stock_info = get_stock_info(stock)
+    stock_info = get_stock_info(stock, driver)
     try:
         famc = float(stock_info["stock_facm"])
         active_pe = float(stock_info["stock_pe_active"])

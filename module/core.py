@@ -10,6 +10,7 @@ from multiprocessing import Pool
 from stock_market import market_emotion_index, market_money
 from stock_self import mid_stock_basic,get_stock_active,short_stock_basic, nine_change
 from spider import get_hot_plate,get_research_report
+from func import driver_init
 
 
 def market_status():
@@ -22,7 +23,7 @@ def market_status():
     return market_score, market_info, money_flow
 
 
-def stock_status(stock_code, stock_type="short"):
+def stock_status(stock_code,driver, stock_type="short"):
     """
     获得股票当前状态
     :param stock_code:
@@ -33,7 +34,7 @@ def stock_status(stock_code, stock_type="short"):
         stock_active_score, stock_active_info = get_stock_active(stock_code, stock_type)
         nine_change_index, nine_change_info = nine_change(stock_code)
         stock_code = stock_code[1:]
-        stock_info = short_stock_basic(stock_code)
+        stock_info = short_stock_basic(stock_code,driver)
         stock_info['active_score'] = stock_active_score
         stock_info['active_info'] = stock_active_info
         stock_info['nine_change_index'] = nine_change_index
@@ -44,7 +45,7 @@ def stock_status(stock_code, stock_type="short"):
         stock_long_score, stock_long_info = get_stock_active(stock_code, stock_type)
         nine_change_index, nine_change_info = nine_change(stock_code)
         stock_code = stock_code[1:]
-        stock_info = mid_stock_basic(stock_code)
+        stock_info = mid_stock_basic(stock_code, driver)
         stock_info['active_score'] = stock_long_score
         stock_info['active_info'] = stock_long_info
         stock_info['nine_change_index'] = nine_change_index
@@ -55,13 +56,27 @@ def stock_status(stock_code, stock_type="short"):
 def news_status(stock_code):
     pass
 
-def plate_status():
+
+def plate_status(driver):
     """
     获得当前市场热点以及机构调研结果
     :return:
     """
-    hot_stock_list, hot_concept_dict = get_hot_plate()
+    hot_stock_list, hot_concept_dict = get_hot_plate(driver)
     research_report = get_research_report()
     return hot_stock_list, hot_concept_dict, research_report
+
+
+def core_func(driver):
+    """
+    核心控制函数
+    :param driver:
+    :param stock_code:
+    :param stock_type:
+    :return:
+    """
+    hot_info = plate_status(driver)
+    market_score, market_info, money_flow = market_status()
+    return market_score, market_info, money_flow, hot_info
 
 # print stock_status("0600624")

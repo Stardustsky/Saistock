@@ -8,6 +8,10 @@ import ConfigParser
 import smtplib
 from email.mime.text import MIMEText
 from email.header import Header
+from os import path
+import sys
+import os
+from selenium import webdriver
 
 
 def read_stock_conf():
@@ -45,6 +49,24 @@ def stock_email(recv,mess):
         print "Error: 无法发送邮件"
 
 
+def driver_init():
+    """
+    webdriver初始化
+    :return:
+    """
+    dirname = path.dirname(path.abspath(__file__))
+    if sys.platform == 'win32':
+        chromedriver = "module/driver/chromedriver.exe"
+    elif sys.platform == 'win64':
+        chromedriver = "module/driver/chromedriver.exe"
+    elif sys.platform == 'darwin':
+        chromedriver = "module/driver/chromedriver.mac"
+    os.environ["webdriver.chrome.driver"] = chromedriver
+    option = webdriver.ChromeOptions()
+    option.add_argument('--ignore-certificate-errors')
+    option.add_argument('headless')
+    chrome = webdriver.Chrome(chromedriver, chrome_options=option)
+    return chrome
 
 
 # aa = read_stock_conf()
