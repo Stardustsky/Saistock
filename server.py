@@ -66,7 +66,7 @@ class IndexHandler(tornado.web.RequestHandler):
 
 
     def post(self):
-        mails = ['454640446@qq.com', 'zer0forpentest@126.com']
+        mails = ['crimson_he@163.com', 'zer0forpentest@126.com']
         res = nine_change_notice(mails)
 
 
@@ -88,7 +88,7 @@ class Application(tornado.web.Application):
 
 
 if __name__ == '__main__':
-    port = 2222
+    port = 3333
     app = Application()
     http_server = tornado.httpserver.HTTPServer(app)
     http_server.listen(port)

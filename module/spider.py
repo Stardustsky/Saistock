@@ -180,14 +180,9 @@ def get_stock_data(stock):
     else:
         stock = "sz"+stock[1:]
     wy_api = "http://money.finance.sina.com.cn/quotes_service/api/json_v2.php/CN_MarketData.getKLineData?symbol=%s&scale=240&ma=no&datalen=20" %stock
+    print wy_api
     response = urllib2.urlopen(wy_api)
     data = response.read()
-    data = str.replace(data, "day", "\"day\"")
-    data = str.replace(data, "open", "\"open\"")
-    data = str.replace(data, "high", "\"high\"")
-    data = str.replace(data, "low", "\"low\"")
-    data = str.replace(data, "close", "\"close\"")
-    data = str.replace(data, "volume", "\"volume\"")
     data = json.loads(data)
     return data
 
@@ -217,11 +212,13 @@ def get_hot_plate(driver):
         data = hot_concept.split("\n")
         for i in range(len(data) / 3):
             hot_concept_dict[(data[i * 3 + 1])] = data[i * 3 + 2]
+        return hot_stock_list, hot_concept_dict
     except Exception as e:
         print "[info]抓取信息失败."
+        return [], []
 
     # driver.quit()
-    return hot_stock_list, hot_concept_dict
+
 
 
 def get_money_flow():

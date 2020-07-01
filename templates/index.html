@@ -6,6 +6,12 @@
     <link rel="stylesheet" href="static/css/stock.css" type="text/css" />
     <script src="static/script/func.js">
     </script>
+    <script>
+        function switch_url(para) {
+            var fra = document.getElementById("focus");
+            fra.src = para;
+        }
+    </script>
 </head>
 <body>
 <div>
@@ -110,6 +116,18 @@
     </table>
 </div>
 
+<hr>
+
+<div>
+    <h2 align="center">关注网站</h2>
+    <p align="center">
+        <a href="#" class="font_a" title="查看热点新闻以及分析报告" onclick=switch_url("https://www.gelonghui.com/live")>格隆汇 | </a>
+        <a href="#" class="font_a" title="查看机构研报及研报下载" onclick=switch_url("http://www.hibor.com.cn/hytop.html")>慧博研投 | </a>
+        <a href="#" class="font_a" title="查看美股期指情况" onclick=switch_url("https://cn.investing.com/markets/")>英为财情</a>
+
+    </p>
+    <iframe src="https://www.gelonghui.com/live" width="100%" height="1000px" id="focus"></iframe>
+</div>
 
 </body>
 </html>
