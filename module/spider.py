@@ -11,6 +11,7 @@ import pandas as pd
 import datetime
 import sys
 import json
+import cookielib
 from selenium import webdriver
 from os import path
 
@@ -240,6 +241,33 @@ def get_money_flow():
     return money_flow
 
 
+def get_gb_report():
+    """
+    研报社短线情绪分析
+    :return:
+    """
+    report_api = "http://admin.gbhome.com/api/v4/common/3in1/discovery?pageNum=1&pageSize=6&keyword="
+    response = urllib2.urlopen(report_api)
+    data = json.loads(response.read())["data"]["records"]
+    return data[1:]
+
+
+def get_gb_yb():
+    art_content = dict()
+    yb_api = "http://admin.gbhome.com//api/v4/common/3in1/zlContent?pageNum=1&pageSize=5&zlId=1000003"
+    yb_content = "http://admin.gbhome.com/api/common/zlArticle/detail/"
+    header = {"Authorization":"Bearer eyJhbGciOiJIUzUxMiJ9.eyJ3eFVzZXJJZCI6MTAzNzEyNywic3ViIjoiMTAzNzEyNyIsIm1vYmlsZVBob25lIjoiMTgyMDI4MjMxMzYiLCJjaGFubmVsIjoiQW5kcm9pZCIsImV4cCI6MTU5NzU0NDM1NywiaWF0IjoxNTk0OTUyMzU3fQ.Bu6GiGLrxtCWfZEVZPcVUUDLodEWC4kpeRTXnNoR_YkSddOJCEpb9G0NgC3yXc9r6TWxjUH5wykgNtXSYJbdDQ"}
+    response = urllib2.urlopen(yb_api)
+    data = json.loads(response.read())["data"]["records"]
+    for i in data:
+        zid = i["id"].replace("zlArticle", "")
+        title = i["title"]
+        c_url = yb_content + zid
+        req = urllib2.Request(c_url, headers=header)
+        res = urllib2.urlopen(req).read()
+        art_content[title] = json.loads(res)["data"]["zlArticle"]["detail"]
+    return art_content
+
 def get_research_report():
     now_time = datetime.datetime.now().strftime('%Y-%m-%d')
     old_time = (datetime.datetime.now() - datetime.timedelta(days=10)).strftime('%Y-%m-%d')
@@ -260,11 +288,8 @@ def get_research_report():
 
 
 
-
-
-
-
-
+# print get_gb_yb()
+# print get_gb_report()
 
 # print get_a50_index_data()
 # print get_china_index_data()

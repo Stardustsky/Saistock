@@ -11,6 +11,10 @@
             var fra = document.getElementById("focus");
             fra.src = para;
         }
+        function show_yb(content) {
+            var newwindow = window.open('', "_blank",'');
+            newwindow.document.write(content);
+        }
     </script>
 </head>
 <body>
@@ -38,31 +42,44 @@
 </div>
 <hr>
 <div>
+    <center><h2>即时情绪分析</h2></center>
+    <ul>
+        {%for i in research%}
+        <p style="color: #2d6a89;font-weight:bold;">
+                {{i["upTime"]}} | 《{{i["title"]}}》
+        </p>
+        <p style="border-bottom:1px dashed #CCCCCC;color: #434e59;">{{i["content"]}}</p>
+        {% end %}
+    </ul>
+</div>
+<hr>
+<div>
     <center><h2>市场热点整理分析</h2></center>
     <p>
-    <h3>市场热点股票：</h3>
+    <h3>独家研报：</h3>
     {%for i in market_hot[0]%}
-    <a target="_blank" class="font_a" href='http://www.iwencai.com/stockpick/search?tid=stockpick&qs=sl_box_main_ths&w={{i}}'>{{i}}</a> |
+    <li>
+        <a target="_blank" class="font_a" onclick="show_yb('{{market_hot[0][i]}}')">{{i}}</a>
+    </li>
     {% end %}
     </p>
-    <h3>市场热点概念：</h3>
+    <!--<div>-->
+        <!--<ul>-->
+            <!--{%for i in market_hot[1]%}-->
+            <!--<li>-->
+            <!--<a target="_blank" class="font_a" href="http://www.iwencai.com/stockpick/search?preParams=&ts=1&f=1&qs=lm_hltj_tj_query&querytype=&tid=stockpick&queryarea=all&w={{i}}">{{i}}:-->
+                <!--{{market_hot[1][i]}}</a>-->
+            <!--</li>-->
+            <!--{% end %}-->
+        <!--</ul>-->
+    <!--</div>-->
+    <h3>机构调研信息:</h3>
     <div>
         <ul>
             {%for i in market_hot[1]%}
             <li>
-            <a target="_blank" class="font_a" href="http://www.iwencai.com/stockpick/search?preParams=&ts=1&f=1&qs=lm_hltj_tj_query&querytype=&tid=stockpick&queryarea=all&w={{i}}">{{i}}:
-                {{market_hot[1][i]}}</a>
-            </li>
-            {% end %}
-        </ul>
-    </div>
-    <h3>机构调研信息:</h3>
-    <div>
-        <ul>
-            {%for i in market_hot[2]%}
-            <li>
                 <a target="_blank" class="font_a" href="http://data.eastmoney.com/report/zw_stock.jshtml?encodeUrl={{i}}">
-                    {{market_hot[2][i]}}</a>
+                    {{market_hot[1][i]}}</a>
             </li>
 
             {% end %}
@@ -123,7 +140,8 @@
     <p align="center">
         <a href="#" class="font_a" title="查看热点新闻以及分析报告" onclick=switch_url("https://www.gelonghui.com/live")>格隆汇 | </a>
         <a href="#" class="font_a" title="查看机构研报及研报下载" onclick=switch_url("http://www.hibor.com.cn/hytop.html")>慧博研投 | </a>
-        <a href="#" class="font_a" title="查看美股期指情况" onclick=switch_url("https://cn.investing.com/markets/")>英为财情</a>
+        <a href="https://cn.investing.com/markets/" target="_blank" class="font_a" title="查看美股期指情况">英为财情 | </a>
+        <a href="https://robo.datayes.com/" target="_blank" class="font_a" title="综合分析">萝卜研投</a>
 
     </p>
     <iframe src="https://www.gelonghui.com/live" width="100%" height="1000px" id="focus"></iframe>

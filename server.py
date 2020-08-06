@@ -21,7 +21,7 @@ class IndexHandler(tornado.web.RequestHandler):
 
     def get(self):
         driver = driver_init()
-        market_score, market_info, money_flow, hot_info = core_func(driver)
+        market_score, market_info, money_flow, gb_data, hot_info = core_func(driver)
         driver.quit()
         try:
             stock = str(self.get_argument("stock"))
@@ -33,6 +33,7 @@ class IndexHandler(tornado.web.RequestHandler):
                 driver.quit()
                 self.render("index.html",
                             market=[market_score, market_info],
+                            research=gb_data,
                             money=money_flow,
                             market_hot=hot_info,
                             stock_self=stock_info,
@@ -54,6 +55,7 @@ class IndexHandler(tornado.web.RequestHandler):
             stock_info['nine_change_info'] = "None"
             self.render("index.html",
                         market=[market_score, market_info],
+                        research=gb_data,
                         money=money_flow,
                         market_hot=hot_info,
                         stock_self=stock_info,
@@ -88,7 +90,7 @@ class Application(tornado.web.Application):
 
 
 if __name__ == '__main__':
-    port = 3333
+    port = 4444
     app = Application()
     http_server = tornado.httpserver.HTTPServer(app)
     http_server.listen(port)

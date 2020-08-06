@@ -145,6 +145,10 @@ def market_emotion_index(idx_type="short"):
 
 
 def market_money():
+    """
+    北向资金分析
+    :return:
+    """
     money_flow = get_money_flow()
     money_flow_dict = dict()
     money_flow_info = ""

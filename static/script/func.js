@@ -6,3 +6,7 @@ function nine_change() {
     httpRequest.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
     httpRequest.send(args);
 }
+
+function show_yb(content) {
+    alert(content);
+}

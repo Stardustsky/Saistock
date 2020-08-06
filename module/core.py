@@ -9,7 +9,7 @@ import os
 from multiprocessing import Pool
 from stock_market import market_emotion_index, market_money
 from stock_self import mid_stock_basic,get_stock_active,short_stock_basic, nine_change
-from spider import get_hot_plate,get_research_report
+from spider import get_hot_plate,get_research_report,get_gb_report,get_gb_yb
 from func import driver_init
 
 
@@ -20,7 +20,8 @@ def market_status():
     """
     market_score, market_info = market_emotion_index()
     money_flow = market_money()
-    return market_score, market_info, money_flow
+    gb_data = get_gb_report()
+    return market_score, market_info, money_flow, gb_data
 
 
 def stock_status(stock_code,driver, stock_type="short"):
@@ -62,9 +63,11 @@ def plate_status(driver):
     获得当前市场热点以及机构调研结果
     :return:
     """
-    hot_stock_list, hot_concept_dict = get_hot_plate(driver)
+    # hot_stock_list, hot_concept_dict = get_hot_plate(driver)
     research_report = get_research_report()
-    return hot_stock_list, hot_concept_dict, research_report
+    gb_yb = get_gb_yb()
+    # return hot_stock_list, hot_concept_dict, research_report
+    return gb_yb, research_report
 
 
 def core_func(driver):
@@ -76,7 +79,7 @@ def core_func(driver):
     :return:
     """
     hot_info = plate_status(driver)
-    market_score, market_info, money_flow = market_status()
-    return market_score, market_info, money_flow, hot_info
+    market_score, market_info, money_flow, gb_data = market_status()
+    return market_score, market_info, money_flow, gb_data, hot_info
 
 # print stock_status("0600624")
