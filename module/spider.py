@@ -246,26 +246,40 @@ def get_gb_report():
     研报社短线情绪分析
     :return:
     """
-    report_api = "http://admin.gbhome.com/api/v4/common/3in1/discovery?pageNum=1&pageSize=6&keyword="
-    response = urllib2.urlopen(report_api)
+    report_api = "http://admin.gbhome.com//api/v4/common/3in1/zlContent?pageNum=1&pageSize=10&zlId=1000004"
+    header = {"Authorization": "Bearer eyJhbGciOiJIUzUxMiJ9.eyJ3eFVzZXJJZCI6MTEzNjY5OCwic3ViIjoiMTEzNjY5OCIsIm1vYmlsZVBob25lIjoiMTc4OTgxOTcxMzYiLCJjaGFubmVsIjoiQW5kcm9pZCIsImV4cCI6MTYwNTI1MjQ2MiwiaWF0IjoxNjAyNjYwNDYyfQ.v6W7O_vvxcLnLY8enba1dGdIxaGtLTj3arPP2NOWWEKZOkSSTNbEmqNPU62jJlRNz_ZFQjI2mtJJNvLXfLwXSQ"}
+    req = urllib2.Request(report_api, headers=header)
+    response = urllib2.urlopen(req)
     data = json.loads(response.read())["data"]["records"]
-    return data[1:]
+    return data[0:]
 
 
 def get_gb_yb():
+    """
+    研报社独家研报分析
+    :return:
+    """
     art_content = dict()
-    yb_api = "http://admin.gbhome.com//api/v4/common/3in1/zlContent?pageNum=1&pageSize=5&zlId=1000003"
+    yb_api = "http://admin.gbhome.com//api/v4/common/3in1/zlContent?pageNum=1&pageSize=8&zlId=1000003"
     yb_content = "http://admin.gbhome.com/api/common/zlArticle/detail/"
-    header = {"Authorization":"Bearer eyJhbGciOiJIUzUxMiJ9.eyJ3eFVzZXJJZCI6MTAzNzEyNywic3ViIjoiMTAzNzEyNyIsIm1vYmlsZVBob25lIjoiMTgyMDI4MjMxMzYiLCJjaGFubmVsIjoiQW5kcm9pZCIsImV4cCI6MTU5NzU0NDM1NywiaWF0IjoxNTk0OTUyMzU3fQ.Bu6GiGLrxtCWfZEVZPcVUUDLodEWC4kpeRTXnNoR_YkSddOJCEpb9G0NgC3yXc9r6TWxjUH5wykgNtXSYJbdDQ"}
+    header = {"Authorization":"Bearer eyJhbGciOiJIUzUxMiJ9.eyJ3eFVzZXJJZCI6MTEzNjY5OCwic3ViIjoiMTEzNjY5OCIsIm1vYmlsZVBob25lIjoiMTc4OTgxOTcxMzYiLCJjaGFubmVsIjoiQW5kcm9pZCIsImV4cCI6MTYwNTI1MjQ2MiwiaWF0IjoxNjAyNjYwNDYyfQ.v6W7O_vvxcLnLY8enba1dGdIxaGtLTj3arPP2NOWWEKZOkSSTNbEmqNPU62jJlRNz_ZFQjI2mtJJNvLXfLwXSQ"}
     response = urllib2.urlopen(yb_api)
     data = json.loads(response.read())["data"]["records"]
-    for i in data:
-        zid = i["id"].replace("zlArticle", "")
-        title = i["title"]
-        c_url = yb_content + zid
-        req = urllib2.Request(c_url, headers=header)
-        res = urllib2.urlopen(req).read()
-        art_content[title] = json.loads(res)["data"]["zlArticle"]["detail"]
+    # print data
+    try:
+        for i in data:
+            zid = i["id"].replace("zlArticle", "")
+            title = i["title"]
+            c_url = yb_content + zid
+            # print c_url
+            # c_url = "http://admin.gbhome.com/api/common/zlArticle/detail/1001139"
+            req = urllib2.Request(c_url, headers=header)
+            res = urllib2.urlopen(req).read()
+            # print res
+            art_content[title] = json.loads(res)["data"]["zlArticle"]["summary"]+"<br>"+json.loads(res)["data"]["zlArticle"]["detail"]
+            # print art_content
+    except:
+        print u'Get stock info error，it may happen in author step'
     return art_content
 
 def get_research_report():

@@ -20,15 +20,13 @@ from module.func import *
 class IndexHandler(tornado.web.RequestHandler):
 
     def get(self):
+        market_score, market_info, money_flow, gb_data, hot_info = core_func()
         driver = driver_init()
-        market_score, market_info, money_flow, gb_data, hot_info = core_func(driver)
-        driver.quit()
         try:
             stock = str(self.get_argument("stock"))
             select_type = str(self.get_argument("select_type"))
             sub = self.get_argument("sub")
             if sub:
-                driver = driver_init()
                 stock_info = stock_status(stock, driver, stock_type=select_type)
                 driver.quit()
                 self.render("index.html",
@@ -40,7 +38,7 @@ class IndexHandler(tornado.web.RequestHandler):
                             stock_code=stock
                             )
         except:
-            print u'获取个股信息失败.'
+            print u'Failed to get stock info.'
             stock_info = dict()
             stock_info['basic_score'] = "None"
             stock_info['basic_info'] = "None"
@@ -90,7 +88,7 @@ class Application(tornado.web.Application):
 
 
 if __name__ == '__main__':
-    port = 4444
+    port = 2222
     app = Application()
     http_server = tornado.httpserver.HTTPServer(app)
     http_server.listen(port)

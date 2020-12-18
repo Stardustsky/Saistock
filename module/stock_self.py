@@ -23,7 +23,7 @@ def mid_stock_basic(stock):
         if active_pe >= 300 or active_pe < 0:
             active_pe = 300.0
     except Exception:
-        print u'[info]股票代码有误或网络错误。'
+        print u'[info]Worng in stock code or network。'
     stock_basic_score = 1
     stock_basic_info = ""
 
@@ -105,7 +105,7 @@ def short_stock_basic(stock, driver):
         if active_pe >= 300 or active_pe < 0:
             active_pe = 300.0
     except Exception:
-        print u'[info]股票代码有误或网络错误。'
+        print u'[info]Worng in stock code or network。'
     stock_basic_score = 1
 
     # 市值分析

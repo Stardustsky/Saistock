@@ -58,7 +58,7 @@ def news_status(stock_code):
     pass
 
 
-def plate_status(driver):
+def plate_status():
     """
     获得当前市场热点以及机构调研结果
     :return:
@@ -70,7 +70,7 @@ def plate_status(driver):
     return gb_yb, research_report
 
 
-def core_func(driver):
+def core_func():
     """
     核心控制函数
     :param driver:
@@ -78,7 +78,7 @@ def core_func(driver):
     :param stock_type:
     :return:
     """
-    hot_info = plate_status(driver)
+    hot_info = plate_status()
     market_score, market_info, money_flow, gb_data = market_status()
     return market_score, market_info, money_flow, gb_data, hot_info
 
